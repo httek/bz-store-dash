@@ -1,23 +1,15 @@
-export const validateMobile = (rule: any, value: any, callback: any) => {
-  if (!value) {
-    return callback(new Error('请输入账号'))
+export const validateMobile = (rule: any, value: number, callback: any) => {
+  const reg = /^[1][3,4,5,7,8][0-9]{9}$/;
+  if (!reg.test(value.toString()))  {
+    return callback(new Error('输入正确的11位手机号码'))
   }
 
-  if (!Number.isInteger(value)) {
-    callback(new Error('Please input digits'))
-  } else {
-    if (value < 18) {
-      callback(new Error('Age must be greater than 18'))
-    } else {
-      callback()
-    }
-  }
+  callback()
 }
 
-
-export const validatePassword = (rule: any, value: any, callback: any) => {
-  if (value === '') {
-    callback(new Error('请输入密码'))
+export const validatePassword = (rule: any, value: string, callback: any) => {
+  if (value.length < 6) {
+    return callback(new Error('密码至少是6位字符'))
   }
 
   callback()

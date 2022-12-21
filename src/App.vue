@@ -9,10 +9,7 @@ const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 
-Cache.forever(TokenCacheKey, 'nice')
-
 watch(() => authStore.token, (n, o) => !n && router.push({path: '/auth/login?redirect=' + route.path}))
-
 const checkTokenTicker = ref<number>(0)
 onMounted(() => {
   if (!checkTokenTicker.value) {
@@ -31,10 +28,12 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <!-- Main -->
   <div v-if="authStore.token" class="container w-full">
     <RouterView />
   </div>
-
+  <!-- End Main -->
+  <!-- Auth -->
   <div v-else class="container w-full">
     <div class="flex auth">
       <div class="flex-none w-1/3 left h-screen">
@@ -47,4 +46,5 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
+  <!-- End Auth -->
 </template>

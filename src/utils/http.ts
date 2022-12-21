@@ -1,12 +1,8 @@
-import axios from "axios";
-import {useAuthStore} from "../states/auth.state";
+import axios, {AxiosResponse} from "axios";
 import {Cache} from "./cache";
 import {TokenCacheKey} from "../consts/auth";
 
-const http = axios.create({
-  baseURL: ''
-})
-
+const http = axios.create()
 http.interceptors.request.use(config => {
   const token = Cache.get(TokenCacheKey)
   if (token) {
@@ -19,6 +15,10 @@ http.interceptors.request.use(config => {
 
   console.log(config)
   return config
+})
+
+http.interceptors.response.use((response: AxiosResponse) => {
+  return response
 })
 
 

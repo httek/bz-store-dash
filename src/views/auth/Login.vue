@@ -9,10 +9,10 @@
         class="demo-ruleForm"
     >
       <el-form-item label="账号" prop="mobile">
-        <el-input v-model.number="loginForm.mobile" placeholder="请输入账号"/>
+        <el-input autofocus v-model.number="loginForm.mobile" placeholder="请输入账号"/>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="loginForm.password" placeholder="请输入密码" type="password"/>
+        <el-input show-password v-model="loginForm.password" placeholder="请输入密码" type="password"/>
       </el-form-item>
 
       <el-form-item>
@@ -36,8 +36,8 @@ const ruleFormRef = ref<FormInstance>()
 const loginForm = reactive({password: '', mobile: ''})
 
 const rules = reactive({
-  password: [{validator: validatePassword, trigger: 'blur'}],
   mobile: [{validator: validateMobile, trigger: 'blur'}],
+  password: [{validator: validatePassword, trigger: 'blur'}],
 })
 
 const submitForm = (formEl: FormInstance | undefined) => {
