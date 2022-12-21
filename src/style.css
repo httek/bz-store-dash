@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.auth .left {
+    width: 300px;
+    background: #9f9d9d;
+}
+
+@media (max-width: 800px) {
+    .auth .left {
+        display: none;
+    }
+}
