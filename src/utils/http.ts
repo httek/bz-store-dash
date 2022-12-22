@@ -2,7 +2,6 @@ import axios, {AxiosResponse} from "axios";
 import {Cache} from "./cache";
 import {TokenCacheKey} from "../consts/auth";
 import {ElNotification} from "element-plus";
-import {$computed} from "vue/macros";
 import {Response} from "../bags/response";
 
 const http = axios.create()
@@ -16,7 +15,6 @@ http.interceptors.request.use(config => {
     config.baseURL = import.meta.env.VITE_BACKEND_API
   }
 
-  console.log(config)
   return config
 })
 

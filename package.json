@@ -9,13 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
     "axios": "^1.2.1",
     "element-plus": "^2.2.27",
+    "nprogress": "^0.2.0",
     "pinia": "^2.0.28",
     "vue": "^3.2.45",
     "vue-router": "4"
   },
   "devDependencies": {
+    "@types/nprogress": "^0.2.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",

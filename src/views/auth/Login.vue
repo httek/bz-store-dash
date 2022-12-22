@@ -33,9 +33,12 @@ import {login} from "../../apis/auth.api";
 import {Cache} from "../../utils/cache";
 import {TokenCacheKey} from "../../consts/auth";
 import {useRoute, useRouter} from "vue-router";
+import {useAuthStore} from "../../states/auth.state";
+import {Admin} from "../../models/admin";
 
 const route = useRoute()
 const router = useRouter()
+const authStore = useAuthStore()
 const ruleFormRef = ref<FormInstance>()
 const loginForm = reactive({password: '123456', mobile: '18101333903'})
 
@@ -57,6 +60,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
 
     Cache.set(TokenCacheKey, response.data.token, 3600 * 24)
+    authStore.profile = response.data as Admin
     router.push({path: (route.query['redirect'] as string) || '/'})
   })
 }

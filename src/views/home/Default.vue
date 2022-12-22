@@ -1,11 +1,11 @@
 <template>
   <h1>Default Home</h1>
+
+  <pre>{{ authStore.menus }}</pre>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import {useAuthStore} from "../../states/auth.state";
 
-import http from "../../utils/http";
-
-http.get('https://httpbin.org/ip').then(res => console.log(res))
-
+const authStore = useAuthStore()
 </script>

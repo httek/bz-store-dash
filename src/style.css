@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .auth .left {
     width: 300px;
     background: #9f9d9d;

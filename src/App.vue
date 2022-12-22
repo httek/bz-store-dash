@@ -1,36 +1,44 @@
 <script setup lang="ts">
 import {useAuthStore} from "./states/auth.state";
-import {onMounted, onUnmounted, ref, watch} from "vue";
-import {useRoute, useRouter} from "vue-router";
-import {Cache} from "./utils/cache";
-import {TokenCacheKey} from "./consts/auth";
+import Sidebar from "./components/Sidebar.vue";
+import {ref, watch} from "vue";
+import {MaxWidth, MinWidth} from "./consts/sidebar";
+import {useRoute} from "vue-router";
 
-const authStore = useAuthStore()
-const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 
-watch(() => authStore.token, (n, o) => !n && router.push({path: '/auth/login?redirect=' + route.path}))
-const checkTokenTicker = ref<number>(0)
-onMounted(() => {
-  if (!checkTokenTicker.value) {
-    checkTokenTicker.value = setInterval(() => authStore.token = Cache.get(TokenCacheKey), 500)
-  }
-})
-
-onUnmounted(() => {
-  // Clear ticker
-  if (checkTokenTicker.value) {
-    clearInterval(checkTokenTicker.value)
-    checkTokenTicker.value = 0
-  }
-})
-
+const LeftCollapsed = ref<Boolean>(false)
+const LeftWidth = ref<number>(MaxWidth)
+const MenuActive = ref<string>('/')
+watch(() => route.path, (n) => MenuActive.value = n)
+watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
 </script>
 
 <template>
   <!-- Main -->
-  <div v-if="authStore.token" class="container w-full">
-    <RouterView />
+  <div v-if="authStore.token" class="container-full w-full">
+    <!-- Header -->
+    <div class="header w-full mb-2 bg-blue-700">
+      <div class="logo content-center p-3">
+        <img src="/vite.svg">
+      </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Main -->
+    <div class="flex ...">
+      <div v-loading="!authStore.menus.length" class="left flex-none h-auto" :style="{'width': LeftWidth + 'px' }">
+        <Sidebar
+            :active="MenuActive"
+            :menus="authStore.menus"
+            :style="{width: [LeftWidth + 'px', '!important']}" class="h-full"
+            :is-collapse="LeftCollapsed"/>
+      </div>
+      <div class="flex-grow h-full bg-amber-100 ml-2 p-3">
+        <RouterView/>
+      </div>
+    </div>
   </div>
   <!-- End Main -->
   <!-- Auth -->
@@ -41,7 +49,7 @@ onUnmounted(() => {
       </div>
       <div class="flex-grow h-screen pl-3">
         <div class="flex justify-center items-center pb-9 h-full">
-          <RouterView />
+          <RouterView/>
         </div>
       </div>
     </div>
