@@ -29,11 +29,15 @@
 import {reactive, ref} from 'vue'
 import type {FormInstance} from 'element-plus'
 import {validateMobile, validatePassword} from "./validator";
-import {ElNotification} from "element-plus";
-import http from "../../utils/http";
+import {login} from "../../apis/auth.api";
+import {Cache} from "../../utils/cache";
+import {TokenCacheKey} from "../../consts/auth";
+import {useRoute, useRouter} from "vue-router";
 
+const route = useRoute()
+const router = useRouter()
 const ruleFormRef = ref<FormInstance>()
-const loginForm = reactive({password: '', mobile: ''})
+const loginForm = reactive({password: '123456', mobile: '18101333903'})
 
 const rules = reactive({
   mobile: [{validator: validateMobile, trigger: 'blur'}],
@@ -42,13 +46,18 @@ const rules = reactive({
 
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (!valid) {
       return
     }
 
-    http.post('/nice', {mice: 'fa'})
-    console.log(loginForm)
+    const response = await login(loginForm as any)
+    if (!response) {
+      return
+    }
+
+    Cache.set(TokenCacheKey, response.data.token, 3600 * 24)
+    router.push({path: (route.query['redirect'] as string) || '/'})
   })
 }
 

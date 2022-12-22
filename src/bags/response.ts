@@ -1,7 +1,7 @@
 export interface Response {
   code: number
-  message: string
-  data: [] | string | boolean | number
+  msg: string
+  data: [] | string | boolean | number | object | any
 }
 
 export interface Paginate {
@@ -16,6 +16,6 @@ export interface Paginate {
 
 export interface PaginateResponse {
   code: number
-  message: string
+  msg: string
   data: Paginate
 }
