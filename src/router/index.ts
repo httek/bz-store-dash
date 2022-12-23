@@ -22,9 +22,19 @@ const defaultRoutes: RouteRecordRaw[] = [
   }
 ]
 
+
+const authRoutes: RouteRecordRaw[] = [
+  {
+    path: '/system/categories', component: () => import('../views/system/Category.vue'), meta: {
+      title: '分类管理', auth: true
+    }
+  }
+]
+
+
 const router = createRouter({
   history: createWebHistory(),
-  routes: defaultRoutes
+  routes: [...defaultRoutes, ...authRoutes]
 })
 
 router.beforeEach(async (to, from) => {
@@ -61,8 +71,10 @@ router.beforeEach(async (to, from) => {
   }
 })
 
-router.afterEach(() => {
+router.afterEach((to) => {
   NProgress.done()
+  const title = (to.meta['title'] as string) || import.meta.env.VITE_APP_NAME
+  title && (document.title = title)
 })
 
 export default router

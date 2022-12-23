@@ -2,7 +2,7 @@
 import {useAuthStore} from "./states/auth.state";
 import Sidebar from "./components/Sidebar.vue";
 import {ref, watch} from "vue";
-import {MaxWidth, MinWidth} from "./consts/sidebar";
+import {HeaderHeight, MaxWidth, MinWidth} from "./consts/sidebar";
 import {useRoute} from "vue-router";
 
 const route = useRoute()
@@ -16,26 +16,48 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
 </script>
 
 <template>
-  <!-- Main -->
-  <div v-if="authStore.token" class="container-full w-full">
+  <div v-if="authStore.token" class="container-full w-full main">
     <!-- Header -->
-    <div class="header w-full mb-2 bg-blue-700">
-      <div class="logo content-center p-3">
-        <img src="/vite.svg">
-      </div>
+    <div class="headers w-full bg-amber-500 text-white" style="background-color: #262f3e">
+      <el-menu
+          :style="{height: HeaderHeight + 'px'}"
+          class="m-0"
+          mode="horizontal"
+          :ellipsis="false"
+          text-color="white"
+          background-color="#262f3e"
+      >
+        <el-menu-item :route="{path: '/'}" index="0" class="flex hover-row text-white">
+          <img class="my-2" src="/vite.svg">
+        </el-menu-item>
+        <div class="flex-grow"/>
+        <el-menu-item index="1">Processing Center</el-menu-item>
+        <el-sub-menu index="2">
+          <template #title>Workspace</template>
+          <el-menu-item index="2-1">item one</el-menu-item>
+          <el-menu-item index="2-2">item two</el-menu-item>
+          <el-menu-item index="2-3">item three</el-menu-item>
+          <el-sub-menu index="2-4">
+            <template #title>item four</template>
+            <el-menu-item index="2-4-1">item one</el-menu-item>
+            <el-menu-item index="2-4-2">item two</el-menu-item>
+            <el-menu-item index="2-4-3">item three</el-menu-item>
+          </el-sub-menu>
+        </el-sub-menu>
+      </el-menu>
     </div>
     <!-- End Header -->
 
     <!-- Main -->
-    <div class="flex ...">
-      <div v-loading="!authStore.menus.length" class="left flex-none h-auto" :style="{'width': LeftWidth + 'px' }">
+    <div class="flex main">
+      <div v-loading="!authStore.menus.length" class="left flex-none" :style="{'width': LeftWidth + 'px', backgroundColor: '#1e222d' }">
         <Sidebar
             :active="MenuActive"
             :menus="authStore.menus"
             :style="{width: [LeftWidth + 'px', '!important']}" class="h-full"
             :is-collapse="LeftCollapsed"/>
       </div>
-      <div class="flex-grow h-full bg-amber-100 ml-2 p-3">
+      <div class="flex-grow h-full m-2 p-3 overflow-y-scroll">
         <RouterView/>
       </div>
     </div>
@@ -54,5 +76,4 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
       </div>
     </div>
   </div>
-  <!-- End Auth -->
 </template>

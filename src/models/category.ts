@@ -1,0 +1,11 @@
+export interface Category {
+  id: number
+  type: number
+  name: string
+  cover?: string | null
+  status: number
+  sequence: number
+  parent?: Category | null
+  created_at: string | null
+  updated_at: string | null
+}

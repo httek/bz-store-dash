@@ -1,5 +1,8 @@
 <template>
   <el-menu
+      active-text-color="#fff"
+      background-color="#1e222d"
+      text-color="#7c878e"
       class="border-0"
       :default-active="active"
       :collapse="isCollapse"
@@ -52,5 +55,5 @@
 <script setup lang="ts">
 import {Menu} from "../models/menu";
 
-defineProps({isCollapse: Boolean, active: String, menus: Array<Menu>})
+defineProps<{isCollapse: Boolean, active: String, menus: Array<Menu>}>()
 </script>
