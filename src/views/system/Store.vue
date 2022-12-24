@@ -5,7 +5,7 @@
       <template #content>
         <div class="flex items-center">
           <span class="text-large font-600 mr-3">系统管理</span>
-          <span class="text-sm">分类列表</span>
+          <span class="text-sm">商户列表</span>
         </div>
       </template>
       <template #extra>

@@ -6,7 +6,6 @@
         status-icon
         :rules="rules"
         label-width="120px"
-        class="demo-ruleForm"
     >
       <el-form-item label="账号" prop="mobile">
         <el-input autofocus v-model.number="loginForm.mobile" placeholder="请输入账号"/>

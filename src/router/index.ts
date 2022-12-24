@@ -28,6 +28,11 @@ const authRoutes: RouteRecordRaw[] = [
     path: '/system/categories', component: () => import('../views/system/Category.vue'), meta: {
       title: '分类管理', auth: true
     }
+  },
+  {
+    path: '/system/stores', component: () => import('../views/system/Store.vue'), meta: {
+      title: '商户管理', auth: true
+    }
   }
 ]
 
@@ -73,8 +78,9 @@ router.beforeEach(async (to, from) => {
 
 router.afterEach((to) => {
   NProgress.done()
-  const title = (to.meta['title'] as string) || import.meta.env.VITE_APP_NAME
-  title && (document.title = title)
+  const title = (to.meta['title'] as string)
+  const company = '[圆堂科技] 花卉平台'
+  document.title = title ? `${company} · ${title}` : company;
 })
 
 export default router

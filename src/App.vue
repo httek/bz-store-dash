@@ -16,12 +16,12 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
 </script>
 
 <template>
-  <div v-if="authStore.token" class="container-full w-full main">
+  <div v-if="authStore.token" class="container-full w-full">
     <!-- Header -->
     <div class="headers w-full bg-amber-500 text-white" style="background-color: #262f3e">
       <el-menu
           :style="{height: HeaderHeight + 'px'}"
-          class="m-0"
+          class="m-0 shadow-sm"
           mode="horizontal"
           :ellipsis="false"
           text-color="white"
@@ -30,10 +30,9 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
         <el-menu-item :route="{path: '/'}" index="0" class="flex hover-row text-white">
           <img class="my-2" src="/vite.svg">
         </el-menu-item>
-        <div class="flex-grow"/>
-        <el-menu-item index="1">Processing Center</el-menu-item>
+        <div class="flex-grow" />
         <el-sub-menu index="2">
-          <template #title>Workspace</template>
+          <template v-if="authStore.profile" #title> <el-icon><User /></el-icon> {{ authStore.profile.name }}</template>
           <el-menu-item index="2-1">item one</el-menu-item>
           <el-menu-item index="2-2">item two</el-menu-item>
           <el-menu-item index="2-3">item three</el-menu-item>
@@ -57,7 +56,7 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
             :style="{width: [LeftWidth + 'px', '!important']}" class="h-full"
             :is-collapse="LeftCollapsed"/>
       </div>
-      <div class="flex-grow h-full m-2 p-3 overflow-y-scroll">
+      <div class="flex-grow p-4">
         <RouterView/>
       </div>
     </div>

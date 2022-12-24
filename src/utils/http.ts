@@ -3,8 +3,10 @@ import {Cache} from "./cache";
 import {TokenCacheKey} from "../consts/auth";
 import {ElNotification} from "element-plus";
 import {Response} from "../bags/response";
+import {useRouter} from "vue-router";
 
 const http = axios.create()
+const router = useRouter()
 http.interceptors.request.use(config => {
   const token = Cache.get(TokenCacheKey)
   if (token) {
@@ -33,6 +35,15 @@ http.interceptors.response.use((httpResponse: AxiosResponse) => {
     case 4040:
       ElNotification.closeAll()
       ElNotification.error({title: '出错了', message: response.msg || '业务数据异常'})
+
+      break;
+
+    case 4010:
+      ElNotification.closeAll()
+      ElNotification.warning({title: '未授权', message: '请登录后在操作'})
+      router.push({path: '/auth/login'})
+
+      break;
   }
 
   return httpResponse;

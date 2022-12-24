@@ -8,4 +8,5 @@ export interface Category {
   parent?: Category | null
   created_at: string | null
   updated_at: string | null
+  children?: Category[] | null
 }

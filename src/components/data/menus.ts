@@ -10,9 +10,12 @@ export const menus: Menu[] = [
         name: 'Category', path: '/system/categories', title: '商品分类', icon: 'Notebook', id: 2
       },
       {
-        name: 'Brand', path: 'brands', title: '品牌管理', icon: 'brand', id: 3, children: [
-          {name: 'Brand List', path: '/system/brands/categories', title: '品牌分类', icon: 'brands', id: 4},
-          {name: 'Brand List', path: '/system/brands', title: '品牌列表', icon: 'brands', id: 5}
+        name: 'Store', path: '/system/stores', title: '商户管理', icon: 'Shop', id: 3
+      },
+      {
+        name: 'Brand', path: 'brands', title: '品牌管理', icon: 'Flag', id: 3, children: [
+          {name: 'Brand List', path: '/system/brands/categories', title: '品牌分类', icon: 'Flag', id: 4},
+          {name: 'Brand List', path: '/system/brands', title: '品牌列表', icon: 'Flag', id: 5}
         ]
       }
     ]

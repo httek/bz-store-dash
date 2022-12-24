@@ -8,12 +8,10 @@
 
 .main {
     height: calc(100vh) !important;
-    overflow-y: scroll;
 }
 
-.main .left {
-    height: calc(100vh - 50px);
-    min-height: 800px;
+.main .flex .left {
+    height: 100%;
 }
 
 .auth .left {
