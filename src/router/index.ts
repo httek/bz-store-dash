@@ -2,7 +2,7 @@ import {createRouter, createWebHistory, RouteRecord, RouteRecordRaw} from "vue-r
 import {Cache} from "../utils/cache";
 import {TokenCacheKey} from "../consts/auth";
 import {useAuthStore} from "../states/auth.state";
-import {profile} from "../apis/auth.api";
+import {getAuthProfile} from "../apis/auth.api";
 import {menus} from "../components/data/menus";
 import 'nprogress/nprogress.css'
 import NProgress from 'nprogress'
@@ -67,7 +67,7 @@ router.beforeEach(async (to, from) => {
 
     // Fetch profile for page refreshed.
     if (token && !authStore.profile) {
-      authStore.profile = await profile()
+      authStore.profile = (await getAuthProfile()).data
     }
 
     if (token && !authStore.menus.length) {

@@ -1,55 +1,53 @@
 import http from "../utils/http";
-import {Response} from "../bags/response";
-import {Category} from "../models/category";
+import { Response } from "../bags/response";
+import { Category } from "../models/category";
 
-/**
- * Get categories.
- *
- * @param search
- */
-export async function getCategories(search?: { type: number, name: string }): Promise<Category[]> {
-  const res = await http.get<Response>('v1/system/categories', {
-    params: search
-  });
-  const response = res.data as Response
-  return response.code == 2000 ? response.data as Category[] : []
-}
+export namespace CategoryAPIs {
+  /**
+   * 获取分类列表
+   * 
+   * @param search 
+   * @returns Response
+   */
+  export function list(search?: { type: number, name: string }): Promise<Response> {
+    return http.get('v1/system/categories', { params: search });
+  }
 
-/**
- * Fetch categories for select options.
- */
-export async function getCategoriesSelector(): Promise<Category[]> {
-  const res = await http.get<Response>('/v1/system/categories/select')
-  const response = res.data as Response;
-
-  return response.code == 2000 ? response.data as Category[] : []
-}
+  /**
+   * 获取分类选择器
+   * 
+   * @returns Response
+   */
+  export function selector(): Promise<Response> {
+    return http.get('/v1/system/categories/select')
+  }
 
 
-/**
- * Update category.
- *
- * @param item
- */
-export async function updateCategory(id: number, item: Category): Promise<Response> {
-  return await http.post(`/v1/system/categories/${id}`, item)
-}
+  /**
+   * Update category.
+   *
+   * @param item
+   */
+  export function update(id: number, item: Category): Promise<Response> {
+    return http.post(`/v1/system/categories/${id}`, item)
+  }
 
 
-/**
- * Add category.
- *
- * @param item
- */
-export async function addCategory(item: Category): Promise<Response> {
-  return await http.post('/v1/system/categories', item)
-}
+  /**
+   * Add category.
+   *
+   * @param item
+   */
+  export function store(item: Category): Promise<Response> {
+    return http.post('/v1/system/categories', item)
+  }
 
-/**
- * Del category
- *
- * @param id
- */
-export async function delCategory(id: number): Promise<Response> {
-  return (await http.delete(`/v1/system/categories/${id}`)).data as Response
+  /**
+   * Del category
+   *
+   * @param id
+   */
+  export function destroy(id: number): Promise<Response> {
+    return http.delete(`/v1/system/categories/${id}`)
+  }
 }

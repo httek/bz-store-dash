@@ -6,6 +6,7 @@
       class="border-0"
       :collapse="isCollapse"
       unique-opened
+      :default-active="active"
       router
   >
     <template v-for="menu of menus">

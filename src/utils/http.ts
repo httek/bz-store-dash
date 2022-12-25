@@ -1,15 +1,14 @@
-import axios, {AxiosResponse} from "axios";
-import {Cache} from "./cache";
-import {TokenCacheKey} from "../consts/auth";
-import {ElNotification} from "element-plus";
-import {Response} from "../bags/response";
-import {useRouter} from "vue-router";
+import axios, { AxiosResponse } from "axios";
+import { Cache } from "./cache";
+import { TokenCacheKey } from "../consts/auth";
+import { ElNotification } from "element-plus";
+import { Response } from "../bags/response";
 
 const http = axios.create()
 http.interceptors.request.use(config => {
   const token = Cache.get(TokenCacheKey)
   if (token) {
-    config.headers = {Authorization: 'Bearer ' + token, ...config.headers}
+    config.headers = { Authorization: 'Bearer ' + token, ...config.headers }
   }
 
   if (config.url && !config.url.startsWith('http')) {
@@ -17,36 +16,20 @@ http.interceptors.request.use(config => {
   }
 
   return config
-})
+},
+  error => {
+    ElNotification.error({ title: '网路异常', message: '当前网络异常、请检查网络设置' })
+    return Promise.reject(error)
+  }
+)
 
 http.interceptors.response.use(async (httpResponse: AxiosResponse) => {
-  const statusCode = httpResponse.status
-  if (statusCode != 200) {
-    ElNotification.error({title: '网路异常', message: '当前网络异常、请检查网络设置'})
-
-    return httpResponse;
+  const response = httpResponse.data as (Response | any)
+  if (response.code != 2000) {
+    ElNotification.warning({ title: response.msg })
   }
 
-  // let response = httpResponse.data as Response
-  // switch (response.code)
-  // {
-  //   case 5000:
-  //   case 4040:
-  //     ElNotification.closeAll()
-  //     ElNotification.error({title: '出错了', message: response.msg || '业务数据异常'})
-  //
-  //     break;
-  //
-  //   case 4010:
-  //     ElNotification.closeAll()
-  //     ElNotification.warning({title: '未授权', message: '请登录后在操作'})
-  //     Cache.forget(TokenCacheKey)
-  //     aut
-  //
-  //     break;
-  // }
-
-  return httpResponse;
+  return response
 })
 
 

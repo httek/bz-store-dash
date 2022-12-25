@@ -1,18 +1,16 @@
 import http from "../utils/http";
-import {Response} from "../bags/response";
-import {Admin} from "../models/admin";
+import { Admin } from "../models/admin";
+import { Response } from "../bags/response";
 
-export async function login(payload: {mobile:number, password: string}): Promise<Response|null> {
-  const res = await http.post<Response>('v1/auth/login', payload);
-  const response = res.data as Response
-
-  return response.code == 2000 ? response : null
+export async function login(payload: { mobile: number, password: string }): Promise<Response> {
+  return await http.post('v1/auth/login', payload);
 }
 
-
-export async function profile(): Promise<Admin | null> {
-  const res = await http.get<Response>('v1/auth/profile');
-  const response = res.data as Response
-
-  return response.code == 2000 ? response.data as Admin : null
+/**
+ * 获取登录用户信息
+ * 
+ * @returns Promisse<Admin | null>
+ */
+export async function getAuthProfile(): Promise<Response> {
+  return await http.get('v1/auth/profile');
 }
