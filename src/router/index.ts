@@ -29,11 +29,11 @@ const authRoutes: RouteRecordRaw[] = [
       title: '分类管理', auth: true
     }
   },
-  {
-    path: '/system/stores', component: () => import('../views/system/Store.vue'), meta: {
-      title: '商户管理', auth: true
-    }
-  },
+  // {
+  //   path: '/system/stores', component: () => import('../views/system/Store.vue'), meta: {
+  //     title: '商户管理', auth: true
+  //   }
+  // },
   {
     path: '/system/delivery/templates', component: () => import('../views/system/Delivery.vue'), meta: {
       title: '配送模版', auth: true

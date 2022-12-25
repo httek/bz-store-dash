@@ -4,19 +4,18 @@
       background-color="#1e222d"
       text-color="#7c878e"
       class="border-0"
-      :default-active="active"
       :collapse="isCollapse"
       unique-opened
       router
   >
     <template v-for="menu of menus">
-      <el-menu-item v-if="!menu.children.length" :index="menu.path">
+      <el-menu-item v-if="!menu.children?.length" :index="menu.path">
         <el-icon v-if="menu.icon">
           <component :is="menu.icon"/>
         </el-icon>
         <template #title>{{ menu.title }}</template>
       </el-menu-item>
-      <el-sub-menu v-else :index="menu.path">
+      <el-sub-menu v-else :index="menu.path || ''">
         <template #title>
           <el-icon v-if="menu.icon">
             <component :is="menu.icon"/>
@@ -30,7 +29,7 @@
             </el-icon>
             <template #title>{{ subMenu.title }}</template>
           </el-menu-item>
-          <el-sub-menu v-else :index="subMenu.path">
+          <el-sub-menu v-else :index="subMenu.path || ''">
             <template #title>
               <el-icon v-if="subMenu.icon">
                 <component :is="subMenu.icon"/>
@@ -55,5 +54,5 @@
 <script setup lang="ts">
 import {Menu} from "../models/menu";
 
-defineProps<{isCollapse: Boolean, active: String, menus: Array<Menu>}>()
+defineProps<{isCollapse: boolean, active: string, menus: Array<Menu>}>()
 </script>

@@ -8,7 +8,7 @@ import {useRoute} from "vue-router";
 const route = useRoute()
 const authStore = useAuthStore()
 
-const LeftCollapsed = ref<Boolean>(false)
+const LeftCollapsed = ref<boolean>(false)
 const LeftWidth = ref<number>(LeftCollapsed.value ? MinWidth : MaxWidth)
 const MenuActive = ref<string>('/')
 watch(() => route.path, (n) => MenuActive.value = n)
