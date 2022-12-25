@@ -151,7 +151,7 @@ const addFormButtonLoading = ref<boolean>(false)
 const addFormModelInit = { parent: null, name: '', cover: '', sequence: 0, status: 1, id: 0 }
 const addFormModel = reactive({ ...addFormModelInit })
 const addFormRef = ref<FormInstance>()
-const addFormRules = reactive({
+const addFormRules = reactive<any>({
   name: [{ validator: validators.nameRequiredWithMin2Len, trigger: 'blur' }]
 })
 const onFileUploaded = (response: Response) => addFormModel.cover = (response.data as string)
