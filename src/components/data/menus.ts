@@ -17,7 +17,10 @@ export const menus: Menu[] = [
           {name: 'Brand List', path: '/system/brands/categories', title: '品牌分类', icon: 'Flag', id: 4},
           {name: 'Brand List', path: '/system/brands', title: '品牌列表', icon: 'Flag', id: 5}
         ]
-      }
+      },
+      {
+        name: 'Delivery', path: '/system/delivery/templates', title: '配送模版', icon: 'Van', id: 8
+      },
     ]
   }
 ];

@@ -9,7 +9,7 @@ const route = useRoute()
 const authStore = useAuthStore()
 
 const LeftCollapsed = ref<Boolean>(false)
-const LeftWidth = ref<number>(MaxWidth)
+const LeftWidth = ref<number>(LeftCollapsed.value ? MinWidth : MaxWidth)
 const MenuActive = ref<string>('/')
 watch(() => route.path, (n) => MenuActive.value = n)
 watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
@@ -32,7 +32,7 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
         </el-menu-item>
         <div class="flex-grow" />
         <el-sub-menu index="2">
-          <template v-if="authStore.profile" #title> <el-icon><User /></el-icon> {{ authStore.profile.name }}</template>
+          <template v-if="authStore.profile" #title> <el-icon><User /></el-icon> {{ authStore.profile?.name }}</template>
           <el-menu-item index="2-1">item one</el-menu-item>
           <el-menu-item index="2-2">item two</el-menu-item>
           <el-menu-item index="2-3">item three</el-menu-item>
@@ -56,7 +56,7 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
             :style="{width: [LeftWidth + 'px', '!important']}" class="h-full"
             :is-collapse="LeftCollapsed"/>
       </div>
-      <div class="flex-grow p-4">
+      <div class="flex-grow">
         <RouterView/>
       </div>
     </div>

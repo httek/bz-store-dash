@@ -39,7 +39,7 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const ruleFormRef = ref<FormInstance>()
-const loginForm = reactive({password: '123456', mobile: '18101333903'})
+const loginForm = reactive({password: '', mobile: ''})
 
 const rules = reactive({
   mobile: [{validator: validateMobile, trigger: 'blur'}],

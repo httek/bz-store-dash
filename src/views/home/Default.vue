@@ -1,7 +1,7 @@
 <template>
   <h1>Default Home</h1>
 
-  <pre>{{ authStore.menus }}</pre>
+  <pre class="mt-10">{{ authStore.profile }}</pre>
 </template>
 
 <script lang="ts" setup>

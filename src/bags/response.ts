@@ -9,9 +9,9 @@ export interface Paginate {
   page: number
   size: number
   total: number
-  lastPage: number
-  hasNext: boolean
-  hasPrev: boolean
+  lastPage?: number
+  hasNext?: boolean
+  hasPrev?: boolean
 }
 
 export interface PaginateResponse {

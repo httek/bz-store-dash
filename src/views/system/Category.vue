@@ -1,65 +1,59 @@
 <template>
-  <div class="container py-2">
-    <!-- Page Header -->
-    <el-page-header>
-      <template #content>
-        <div class="flex items-center">
-          <span class="text-large font-600 mr-3">系统管理</span>
-          <span class="text-sm">分类列表</span>
-        </div>
+  <div class="container-full w-full p-4">
+
+    <PageHeader add-btn @on-add="onAddVisible" :path="['系统管理', `分类列表`]">
+      <template #default>
+        <el-form :inline="true" :model="searchFormModel" class="my-2 mt-5">
+          <el-form-item label="类型">
+            <el-select v-model="searchFormModel.type" placeholder="请选择类型">
+              <el-option label="商品分类" :value="0"/>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="名称">
+            <el-input v-model="searchFormModel.name" placeholder="按名称搜索"/>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="getCategoryList">搜索</el-button>
+            <el-button @click="onResetSearchForm">重置</el-button>
+          </el-form-item>
+        </el-form>
       </template>
-      <template #extra>
-        <div class="flex items-center">
-          <el-button type="primary" @click="onAddVisible" icon="Plus" circle />
-        </div>
-      </template>
-      <el-form :inline="true" :model="searchFormModel" class="my-2 mt-5">
-        <el-form-item label="类型">
-          <el-select v-model="searchFormModel.type" placeholder="请选择类型">
-            <el-option label="商品分类" :value="0"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="名称">
-          <el-input v-model="searchFormModel.name" placeholder="按名称搜索"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="getCategoryList">搜索</el-button>
-          <el-button @click="onResetSearchForm">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </el-page-header>
+    </PageHeader>
 
     <!-- Empty data. -->
     <el-empty v-if="!items.length" class="mt-36" description="暂无数据."/>
 
     <!-- Data view -->
     <el-table
+        border
         stripe
         v-if="items.length"
         :data="items"
         row-key="id"
         :default-expand-all="true"
+        highlight-current-row
+        table-layout="auto"
     >
       <el-table-column prop="name" label="名称" />
-      <el-table-column prop="cover" label="图标">
+      <el-table-column width="80" prop="cover" label="图标">
         <template #default="scope">
           <el-image
-              v-if="scope.row.cover" class="rounded-full"
-              style="height: 24px"
+              v-if="scope.row.cover" class="rounded"
+              style="height: 28px"
               :preview-src-list="[scope.row.cover]"
               :src="scope.row.cover" fit="contain"/>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态">
+      <el-table-column width="80" prop="status" label="状态">
         <template #default="scope">
           <el-tag
-              :type="scope.row.status === 1 ? 'primary' : 'danger'"
+              :type="scope.row.status === 1 ? '' : 'danger'"
               disable-transitions
           >{{ scope.row.status ? '正常' : '禁用' }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="sequence" label="排序"/>
+      <el-table-column width="100" class="flex justify-center" prop="sequence" label="排序"/>
       <el-table-column prop="created_at" label="创建时间"/>
       <el-table-column prop="created_at" label="更新时间"/>
       <el-table-column fixed="right" label="操作" width="120">
@@ -71,8 +65,8 @@
               cancel-button-text="取消"
               icon-color="#626AEF"
               width="200px"
-              @confirm="onDelete(scope.row.id, $event)"
-              :title="scope.row.level <= 2 ? '确定要删除吗(所属子分类也会被删除)?' : '确定要是删除吗?'"
+              @confirm="onDelete(scope.row.id)"
+              title="确定要删除吗"
           >
             <template #reference>
               <el-button link class="hover:text-red-500" >删除</el-button>
@@ -85,7 +79,7 @@
     <!-- Add -->
     <el-dialog
         v-model="addDialogVisible"
-        :title="currentOnEdit > 0 ? '编辑分类' : '添加分类'"
+        :title="addFormModel.id > 0 ? '编辑分类' : '添加分类'"
         width="600px"
         align-center
         class="px-5"
@@ -110,7 +104,7 @@
           />
         </el-form-item>
         <el-form-item label="名称" required prop="name">
-          <el-input autofocus v-model="addFormModel.name" clearable placeholder="请输入分类名称"/>
+          <el-input v-model="addFormModel.name" clearable placeholder="请输入分类名称"/>
         </el-form-item>
         <el-form-item label="封面">
           <el-upload
@@ -122,18 +116,20 @@
               list-type="picture"
               :limit="1"
               :on-success="onFileUploaded"
-              :on-remove="() => addFormModel.cover = null"
+              :on-remove="() => addFormModel.cover = ''"
           >
             <el-icon size="24" class="mr-4 text-blue-500">
               <UploadFilled/>
             </el-icon>
-            选择文件
+             选择文件
           </el-upload>
         </el-form-item>
         <el-form-item label="排序">
           <el-col :span="10">
             <el-form-item>
               <el-input-number
+                  :min="0"
+                  :max="9999999"
                   placeholder="可选, 分类排序"
                   v-model="addFormModel.sequence"
                   controls-position="right"
@@ -171,6 +167,14 @@ import {Response} from "../../bags/response";
 import type {FormInstance} from "element-plus";
 import {validateName} from "./category/validator";
 import {ElNotification} from "element-plus";
+import PageHeader from "../../components/PageHeader.vue";
+
+export interface treeNode {
+  value: number
+  label: string
+  disabled: boolean
+  children?: treeNode[] | null
+}
 
 onMounted(() => getCategoryList())
 const authStore = useAuthStore()
@@ -184,19 +188,13 @@ const onResetSearchForm = () => {
   getCategoryList()
 }
 
-export interface treeNode {
-  value: number,
-  label: string,
-  children?: treeNode[] | null
-}
-
 let categoriesSelector = reactive<treeNode[]>([])
 
-function makeTreeNode(item: CategoryModel): treeNode {
-  let node: treeNode = {value: item.id, label: item.name, children: []}
+function makeTreeNode(item: CategoryModel, disabled?: number): treeNode {
+  let node: treeNode = {value: item.id, label: item.name, disabled: disabled == item.id, children: []}
   if (item.children?.length) {
     for (const child of item.children) {
-      node.children?.push(makeTreeNode(child))
+      node.children?.push(makeTreeNode(child, disabled))
     }
   }
 
@@ -215,7 +213,7 @@ const onFileUploaded = (response: Response) => addFormModel.cover = (response.da
 const onAddVisible = async (row?: CategoryModel) => {
   const cateRes = await getCategoriesSelector()
   for (const cate of cateRes) {
-    categoriesSelector.push(makeTreeNode(cate))
+    categoriesSelector.push(makeTreeNode(cate, row?.id))
   }
 
   if (row) {
@@ -230,7 +228,7 @@ const onAddCancel = () => {
   Object.assign(addFormModel, addFormModelInit)
   categoriesSelector = []
 }
-const onAddSubmit = async (formEl: FormInstance | undefined) => {
+const onAddSubmit = (formEl: FormInstance | undefined) => {
   if (!formEl) return
 
   formEl.validate(async (valid) => {
@@ -246,13 +244,10 @@ const onAddSubmit = async (formEl: FormInstance | undefined) => {
     }
     addFormButtonLoading.value = false
     ElNotification.success({title: '操作成功'})
-    getCategoryList()
+    await getCategoryList()
     onAddCancel()
   })
 }
-
-
-
 
 function onDelete(id: number) {
   delCategory(id).then(res => {
