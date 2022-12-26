@@ -111,78 +111,128 @@
     </div>
 
     <!-- Add -->
-    <el-dialog v-model="opVisible" :title="opFormModel.id > 0 ? '编辑' : '添加'" width="600px" align-center class="px-5"
+    <el-dialog width="700px" v-model="opVisible" :title="opFormModel.id > 0 ? '编辑' : '添加'" align-center class="px-5"
                destroy-on-close :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
-      <el-form status-icon ref="opFormRef" :rules="opFormRules" :model="opFormModel" label-width="80px" class="w-full">
-        {{ opFormModel }}
-        <el-form-item required label="账号" prop="owner_id">
-          <el-select
-              class="w-full"
-              v-model="opFormModel.owner_id"
-              filterable
-              remote
-              reserve-keyword
-              clearable
-              placeholder="请选择店铺管理员, 可按照手机号搜索"
-              remote-show-suffix
-              :remote-method="getAdminLists"
-          >
-            <el-option
-                v-for="item in admins"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="商户" required prop="partner">
-          <el-input v-model="opFormModel.partner" clearable placeholder="商户名称"/>
-        </el-form-item>
-        <el-form-item label="电话" required prop="phone">
-          <el-input v-model="opFormModel.phone" clearable placeholder="商户联系电话"/>
-        </el-form-item>
-        <el-form-item label="名称" required prop="name">
-          <el-input v-model="opFormModel.name" clearable placeholder="店铺名称"/>
-        </el-form-item>
-        <el-form-item label="图标" prop="logo">
-          <el-input v-model="opFormModel.logo" clearable placeholder="店铺图标"/>
-        </el-form-item>
-        <el-form-item label="图册" prop="photos">
-          <el-input v-model="opFormModel.photos" clearable placeholder="店铺图册"/>
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="opFormModel.address" maxlength="100" clearable placeholder="商户地址"/>
-        </el-form-item>
-        <el-form-item label="提现" required prop="cash">
-          <el-select placeholder="提现方式" class="w-full" v-model="opFormModel.cash" clearable required>
-            <el-option v-for="(name, index) of cashTypes" :label="name" :value="index"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="押金">
-          <el-col :span="10">
-            <el-form-item>
-              <el-input-number placeholder="押金(¥)" v-model="opFormModel.deposit" controls-position="right" :min="0"
+      <el-form inline status-icon ref="opFormRef" :rules="opFormRules" :model="opFormModel" label-width="80px"
+               class="w-full">
+        <el-row :gutter="8">
+          <el-col :span="12">
+            <el-form-item class="w-full" label="商户名称" required prop="partner">
+              <el-input v-model="opFormModel.partner" clearable placeholder="商户名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="商户地址" prop="address">
+              <el-input v-model="opFormModel.address" maxlength="100" clearable placeholder="商户地址"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="店铺名称" required prop="name">
+              <el-input v-model="opFormModel.name" clearable placeholder="店铺名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="w-full" required label="店铺账号" prop="owner_id">
+              <el-select
+                  class="w-full"
+                  v-model="opFormModel.owner_id"
+                  filterable
+                  remote
+                  reserve-keyword
+                  clearable
+                  placeholder="可按手机号码搜索"
+                  remote-show-suffix
+                  :remote-method="getAdminLists"
+              >
+                <el-option
+                    v-for="item in admins"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item required label="店铺图标" prop="logo">
+              <el-upload
+                  :limit="1"
+                  :on-success="onFileUploaded"
+                  :on-remove="() => opFormModel.logo = ''"
+                  accept="image/png,image/jpg,image/jpeg"
+                  v-model="opFormModel.logo"
+                  :action="UploadApi" :headers="{ Authorization: 'Bearer ' + authStore.token }"
+                  list-type="picture"
+              >
+                <el-icon size="22" v-show="!opFormModel.logo || opFormModel.logo === ''"><FolderOpened /></el-icon>
+              </el-upload>
+              <el-dialog v-model="previewLogo" :oncancel="() => previewLogo = false">
+                <img w-full :src="opFormModel.logo" alt="店铺图标" />
+              </el-dialog>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item class="w-full" label="店铺图册" prop="photos">
+              <el-input v-model="opFormModel.photos" clearable placeholder="店铺图册"/>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item class="w-full" label="押金额度" prop="deposit">
+              <el-input-number class="w-full" placeholder="押金(¥)" v-model="opFormModel.deposit"
+                               controls-position="right" :min="0"
                                :precision="2" :step="100"/>
             </el-form-item>
           </el-col>
-          <el-col class="text-center" :span="4">
-            <span class="text-gray-500">抽成</span>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="联系电话" prop="phone">
+              <el-input v-model="opFormModel.phone" clearable placeholder="商户联系电话"/>
+            </el-form-item>
           </el-col>
-          <el-col :span="10">
-            <el-input-number placeholder="抽成比例" v-model="opFormModel.deduct" controls-position="right" :min="0"
-                             :max="1" :precision="2" :step="0.1"/>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="抽成比例" prop="deduct">
+              <el-input-number class="w-full" placeholder="抽成比例" v-model="opFormModel.deduct"
+                               controls-position="right" :min="0"
+                               :max="1" :precision="2" :step="0.1"/>
+            </el-form-item>
           </el-col>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="opFormModel.status">
-            <el-radio-button v-for="(name, index) of statusTypes" :label="index">{{ name }}</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="简介">
-          <el-input v-model="opFormModel.description" maxlength="200" placeholder="店铺简介,可选" show-word-limit
-                    type="textarea"
-                    :rows="3"/>
-        </el-form-item>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="提现方式" prop="cash">
+              <el-select placeholder="提现方式" class="w-full" v-model="opFormModel.cash" clearable>
+                <el-option v-for="(name, index) of cashTypes" :label="name" :value="index"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item  class="w-full" label="收款名称" prop="cash_meta">
+              <el-input v-model="opFormModel.cash_meta.account_name" clearable placeholder="收款名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item  class="w-full" label="收款账号" prop="cash_meta">
+              <el-input v-model="opFormModel.cash_meta.account" clearable placeholder="收款账号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="开户银行" prop="cash_meta">
+              <el-input :disabled="[0, 2].includes(opFormModel.cash)" :value="opFormModel.cash_meta.account_bank" clearable placeholder="开户银行"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="店铺状态" prop="status">
+              <el-radio-group v-model="opFormModel.status">
+                <el-radio-button v-for="(name, index) of statusTypes" :label="index">{{ name }}</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item class="w-full" label="店铺简介">
+              <el-input v-model="opFormModel.description" maxlength="200" placeholder="店铺简介,可选" show-word-limit
+                        type="textarea"
+                        :rows="3"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -201,15 +251,17 @@ import {onMounted, reactive, ref, watch} from "vue";
 import {StoreAPIs as APIs} from "../../apis/store.api";
 import {AdminAPIs} from "../../apis/admin.api";
 import {Paginate, Response} from "../../bags/response";
-import {ElNotification, FormInstance} from "element-plus";
+import {ElNotification, FormInstance } from "element-plus";
 import {Delivery} from "../../models/delivery";
-import {HTTP} from "../../consts";
+import {HTTP, UploadApi} from "../../consts";
 import {Store} from "../../models/store";
 import {Admin} from "../../models/admin";
+import {useAuthStore} from "../../states/auth.state";
 
 onMounted(() => getLists())
 
-const cashTypes = ['对私打款', '对公转账', '其他方式']
+const authStore = useAuthStore()
+const cashTypes = ['对私打款', '对公转账']
 const statusTypes = ['停用', '停业', '开业'] // 0 Blocked 1 Closing 2 Sale
 const items = reactive<Paginate>({data: [], total: 0, page: 1, size: 10, lastPage: 1});
 const getLists = () => {
@@ -217,11 +269,13 @@ const getLists = () => {
 }
 
 const admins = ref<Admin[]>([])
-const getAdminLists = async (mobile?:number, init:boolean = false) => {
+const getAdminLists = async (mobile?: number, init: boolean = false) => {
   if (init) {
-    admins.value = (await AdminAPIs.list(1, 99999)).data.data
+    admins.value = (await AdminAPIs.list(1, 999999, {type: 1})).data.data
   } else if (mobile && mobile.toString().length == 11) {
-    admins.value = (await AdminAPIs.list(1, 1, {mobile, type: 1})).data.data
+    admins.value = (await AdminAPIs.list(1, 999999, {mobile, type: 1})).data.data
+  } else if (init) {
+    admins.value = (await AdminAPIs.list(1, 999999, {type: 1})).data.data
   }
 }
 
@@ -230,6 +284,7 @@ const filterInit = {
   store_name: '',
   status: -1,
   cash_type: -1,
+  cash_meta: {account: '', account_name: '', account_bank: ''},
   address: '',
   owner_id: 0,
   created_at: [],
@@ -252,18 +307,22 @@ const validateName = (rule: any, value: string, callback: any) => {
 const opVisible = ref<boolean>(false)
 const opFormRef = ref<FormInstance>()
 const opFormButtonLoading = ref(false)
-const opFormModelInit: Store = {id: 0, status: 2, deduct: 0, deposit: 0, cash: 0}
+const opFormModelInit: Store = {id: 0, status: 2, deduct: 0, deposit: 0, cash: 0, cash_meta: {}}
 const opFormModel = reactive({...opFormModelInit})
 const opFormRules = reactive({
   name: [{validator: validateName, trigger: 'blur'}]
 })
+const previewLogo = ref<boolean>(false)
+const onFileUploaded = (response: Response) => {
+  opFormModel.logo = response.data
+}
 const onOp = (row?: Delivery) => {
   if (row) {
     Object.assign(opFormModel, row)
   }
 
-  getAdminLists()
   opVisible.value = true
+  getAdminLists(undefined, true)
 }
 const onOpCancel = () => {
   Object.assign(opFormModel, opFormModelInit)

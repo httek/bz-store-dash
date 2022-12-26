@@ -1,3 +1,9 @@
+export interface CashMeta {
+  account?: string
+  account_name?: string
+  account_bank?: string
+}
+
 export interface Store {
   id: number
   partner?: string
@@ -5,7 +11,7 @@ export interface Store {
   logo?: string | null
   photos?: string[] | null
   cash?: number
-  cash_meta?: any
+  cash_meta: CashMeta
   address?: string | null
   aptitude?: any
   deposit?: number
