@@ -22,18 +22,17 @@ const defaultRoutes: RouteRecordRaw[] = [
   }
 ]
 
-
 const authRoutes: RouteRecordRaw[] = [
   {
-    path: '/system/categories', component: () => import('../views/system/Category.vue'), meta: {
+    path: '/system/categories', component: () => import(`../views/system/Category.vue`), meta: {
       title: '分类管理', auth: true
     }
   },
-  // {
-  //   path: '/system/stores', component: () => import('../views/system/Store.vue'), meta: {
-  //     title: '商户管理', auth: true
-  //   }
-  // },
+  {
+    path: '/system/stores', component: () => import((`../views/system/Store.vue`)), meta: {
+      title: '店铺管理', auth: true
+    }
+  },
   {
     path: '/system/delivery/templates', component: () => import('../views/system/Delivery.vue'), meta: {
       title: '配送模版', auth: true
@@ -84,7 +83,7 @@ router.beforeEach(async (to, from) => {
 router.afterEach((to) => {
   NProgress.done()
   const title = (to.meta['title'] as string)
-  const company = '[圆堂科技] 花卉平台'
+  const company = import.meta.env.VITE_SITE_NAME
   document.title = title ? `${company} · ${title}` : company;
 })
 

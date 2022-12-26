@@ -18,11 +18,12 @@
         </el-form>
       </template>
     </PageHeader>
-    <!-- Empty data. -->
-    <el-empty v-if="!items.length" class="mt-36" description="暂无数据." />
     <!-- Data view -->
-    <el-table :border="true" stripe v-if="items.length" :data="items" row-key="id" :default-expand-all="true"
+    <el-table :border="true" stripe :data="items" row-key="id" :default-expand-all="true"
       highlight-current-row table-layout="auto">
+      <template #empty>
+        <el-empty description="暂无数据"></el-empty>
+      </template>
       <el-table-column prop="name" label="名称" />
       <el-table-column width="80" prop="cover" label="图标">
         <template #default="scope">

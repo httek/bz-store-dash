@@ -5,6 +5,7 @@ import {ref, watch} from "vue";
 import {HeaderHeight, MaxWidth, MinWidth} from "./consts/sidebar";
 import {useRoute} from "vue-router";
 
+
 const route = useRoute()
 const authStore = useAuthStore()
 
@@ -13,12 +14,13 @@ const LeftWidth = ref<number>(LeftCollapsed.value ? MinWidth : MaxWidth)
 const MenuActive = ref<string>('/')
 watch(() => route.path, (n) => MenuActive.value = n)
 watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
+
 </script>
 
 <template>
   <div v-if="authStore.token" class="container-full w-full">
     <!-- Header -->
-    <div class="headers w-full bg-amber-500 text-white" style="background-color: #262f3e">
+    <div class="headers bg-amber-500 text-white" style="background-color: #262f3e">
       <el-menu
           :style="{height: HeaderHeight + 'px'}"
           class="m-0 shadow-sm"
@@ -48,7 +50,7 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
     <!-- End Header -->
 
     <!-- Main -->
-    <div class="flex main">
+    <div class="flex main w-auto">
       <div v-loading="!authStore.menus.length" class="left flex-none" :style="{'width': LeftWidth + 'px', backgroundColor: '#1e222d' }">
         <Sidebar
             :active="MenuActive"
@@ -56,7 +58,7 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
             :style="{width: [LeftWidth + 'px', '!important']}" class="h-full"
             :is-collapse="LeftCollapsed"/>
       </div>
-      <div class="flex-grow">
+      <div class="flex-grow w-full">
         <RouterView/>
       </div>
     </div>

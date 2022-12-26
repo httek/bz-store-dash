@@ -9,6 +9,17 @@
       </el-form-item>
 
       <el-form-item>
+        <el-date-picker
+            v-model="value"
+            type="daterange"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            value-format="YYYY-MM-DD"
+        />
+      </el-form-item>
+      <el-form-item>
+        {{ value }}
         <el-button type="primary" class="w-full bg-blue-600" @click="submitForm(ruleFormRef)">登录
         </el-button>
       </el-form-item>
@@ -36,6 +47,8 @@ const rules = reactive<any>({
   mobile: [{ validator: validators.mobile, trigger: 'blur' }],
   password: [{ validator: validators.password, trigger: 'blur' }],
 })
+
+const value = ref([])
 
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return

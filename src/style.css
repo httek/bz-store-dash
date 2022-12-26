@@ -2,22 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --el-menu-item-height: 45px;
-}
-
 .main {
     height: calc(100vh) !important;
-}
-
-.main .flex .left {
-    height: 100%;
+    width: calc(100vw) !important;
+    overflow: scroll;
 }
 
 .auth .left {
-    width: 300px;
     background: #9f9d9d;
-    position: absolute;
 }
 
 @media (max-width: 800px) {

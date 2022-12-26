@@ -10,7 +10,7 @@ export const menus: Menu[] = [
         name: 'Category', path: '/system/categories', title: '商品分类', icon: 'Notebook', id: 2
       },
       {
-        name: 'Store', path: '/system/stores', title: '商户管理', icon: 'Shop', id: 3
+        name: 'Store', path: '/system/stores', title: '店铺管理', icon: 'Shop', id: 3
       },
       {
         name: 'Brand', path: 'brands', title: '品牌管理', icon: 'Flag', id: 3, children: [

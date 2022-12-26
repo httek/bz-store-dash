@@ -5,7 +5,7 @@
         <el-breadcrumb>
           <el-breadcrumb-item v-for="(p, i) of path">
             <template v-if="i < path.length - 1">
-              <span class="font-medium">{{ p }}</span>
+              <span class="font-bold">{{ p }}</span>
             </template>
             <template v-else>{{ p }}</template>
           </el-breadcrumb-item>
@@ -14,22 +14,20 @@
 
       <div class="flex-grow flex justify-end">
         <el-tooltip
-            v-if="addBtn"
-            class="box-item"
-            effect="dark"
-            content="新增"
-            placement="bottom-start"
-        >
-          <el-button size="small" class="mt-1" type="primary" @click="$emit('on-add')" icon="Plus" circle/>
-        </el-tooltip>
-        <el-tooltip
             v-if="exportBtn"
-            class="box-item"
             effect="dark"
             content="导出"
             placement="bottom-start"
         >
-          <el-button size="small" class="mt-1" @click="$emit('onExport')" icon="Download" circle/>
+          <el-button class="mt-1" @click="$emit('onExport')" icon="Download" circle/>
+        </el-tooltip>
+        <el-tooltip
+            v-if="addBtn"
+            effect="dark"
+            content="新增"
+            placement="bottom-start"
+        >
+          <el-button class="mt-1" type="primary" @click="$emit('on-add')" icon="Plus" circle/>
         </el-tooltip>
       </div>
     </div>
