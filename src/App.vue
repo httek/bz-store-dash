@@ -1,22 +1,3 @@
-<script setup lang="ts">
-import {useAuthStore} from "./states/auth.state";
-import Sidebar from "./components/Sidebar.vue";
-import {ref, watch} from "vue";
-import {HeaderHeight, MaxWidth, MinWidth} from "./consts/sidebar";
-import {useRoute} from "vue-router";
-
-
-const route = useRoute()
-const authStore = useAuthStore()
-
-const LeftCollapsed = ref<boolean>(false)
-const LeftWidth = ref<number>(LeftCollapsed.value ? MinWidth : MaxWidth)
-const MenuActive = ref<string>('/')
-watch(() => route.path, (n) => MenuActive.value = n)
-watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
-
-</script>
-
 <template>
   <div v-if="authStore.token" class="container-full w-full">
     <!-- Header -->
@@ -58,7 +39,7 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
             :style="{width: [LeftWidth + 'px', '!important']}" class="h-full"
             :is-collapse="LeftCollapsed"/>
       </div>
-      <div class="flex-grow w-full">
+      <div v-loading="appStore.routeLoading" class="flex-grow w-full">
         <RouterView/>
       </div>
     </div>
@@ -78,3 +59,24 @@ watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import {useAuthStore} from "./states/auth.state";
+import Sidebar from "./components/Sidebar.vue";
+import {ref, watch} from "vue";
+import {HeaderHeight, MaxWidth, MinWidth} from "./consts/sidebar";
+import {useRoute} from "vue-router";
+import {useStore} from "./states/app.state";
+
+
+const route = useRoute()
+const authStore = useAuthStore()
+const appStore = useStore()
+
+const LeftCollapsed = ref<boolean>(false)
+const LeftWidth = ref<number>(LeftCollapsed.value ? MinWidth : MaxWidth)
+const MenuActive = ref<string>('/')
+watch(() => route.path, (n) => MenuActive.value = n)
+watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
+
+</script>

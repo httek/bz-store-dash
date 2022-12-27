@@ -164,19 +164,14 @@
                   :action="UploadApi" :headers="{ Authorization: 'Bearer ' + authStore.token }"
                   list-type="picture"
               >
-                <el-icon size="22" v-show="!opFormModel.logo || opFormModel.logo === ''"><FolderOpened /></el-icon>
+
+                <span v-show="!opFormModel.logo || opFormModel.logo === ''" class="text-blue-500"> 选择图片 </span>
               </el-upload>
               <el-dialog v-model="previewLogo" :oncancel="() => previewLogo = false">
-                <img w-full :src="opFormModel.logo" alt="店铺图标" />
+                <img w-full :src="opFormModel.logo" alt="店铺图标"/>
               </el-dialog>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item class="w-full" label="店铺图册" prop="photos">
-              <el-input v-model="opFormModel.photos" clearable placeholder="店铺图册"/>
-            </el-form-item>
-          </el-col>
-
           <el-col :span="12">
             <el-form-item class="w-full" label="押金额度" prop="deposit">
               <el-input-number class="w-full" placeholder="押金(¥)" v-model="opFormModel.deposit"
@@ -204,18 +199,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item  class="w-full" label="收款名称" prop="cash_meta">
+            <el-form-item class="w-full" label="收款名称" prop="cash_meta">
               <el-input v-model="opFormModel.cash_meta.account_name" clearable placeholder="收款名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item  class="w-full" label="收款账号" prop="cash_meta">
+            <el-form-item class="w-full" label="收款账号" prop="cash_meta">
               <el-input v-model="opFormModel.cash_meta.account" clearable placeholder="收款账号"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item class="w-full" label="开户银行" prop="cash_meta">
-              <el-input :disabled="[0, 2].includes(opFormModel.cash)" :value="opFormModel.cash_meta.account_bank" clearable placeholder="开户银行"/>
+              <el-input :disabled="[0, 2].includes(opFormModel.cash)" :value="opFormModel.cash_meta.account_bank"
+                        clearable placeholder="开户银行"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -251,7 +247,7 @@ import {onMounted, reactive, ref, watch} from "vue";
 import {StoreAPIs as APIs} from "../../apis/store.api";
 import {AdminAPIs} from "../../apis/admin.api";
 import {Paginate, Response} from "../../bags/response";
-import {ElNotification, FormInstance } from "element-plus";
+import {ElNotification, FormInstance} from "element-plus";
 import {Delivery} from "../../models/delivery";
 import {HTTP, UploadApi} from "../../consts";
 import {Store} from "../../models/store";
@@ -296,9 +292,14 @@ const onResetFilter = () => {
   getLists()
 }
 
-const validateName = (rule: any, value: string, callback: any) => {
+const validateName = async (rule: any, value: string, callback: any) => {
   if (value.length < 2) {
     return callback(new Error('名称至少2个字符'))
+  }
+
+  const res = await APIs.precisSearch({key: 'name', value})
+  if (res.data && res.data.length > 0) {
+    return callback(new Error('该店铺名称已被占用'))
   }
 
   callback()

@@ -29,6 +29,15 @@ export namespace StoreAPIs {
   }
 
   /**
+   * 完全匹配
+   *
+   * @param search
+   */
+  export function precisSearch(search: {key: string, value: any, fields?: string[]}): Promise<Response> {
+    return http.get(prefix + '/precis', {params: search})
+  }
+
+  /**
    * Detail
    *
    * @param id

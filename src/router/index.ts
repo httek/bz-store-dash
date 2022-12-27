@@ -6,6 +6,7 @@ import {getAuthProfile} from "../apis/auth.api";
 import {menus} from "../components/data/menus";
 import 'nprogress/nprogress.css'
 import NProgress from 'nprogress'
+import {useStore} from "../states/app.state";
 
 NProgress.configure({ easing: 'ease' });
 
@@ -49,6 +50,8 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   NProgress.start()
   const authStore = useAuthStore()
+  const appStore = useStore()
+  appStore.routeLoading = true
   // Lost state && token in cache.
   if (!authStore.token) {
     const token: string = Cache.get(TokenCacheKey)
@@ -85,6 +88,8 @@ router.afterEach((to) => {
   const title = (to.meta['title'] as string)
   const company = import.meta.env.VITE_SITE_NAME
   document.title = title ? `${company} · ${title}` : company;
+  const appStore = useStore()
+  appStore.routeLoading = false
 })
 
 export default router
