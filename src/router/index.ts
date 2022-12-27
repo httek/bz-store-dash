@@ -41,7 +41,6 @@ const authRoutes: RouteRecordRaw[] = [
   }
 ]
 
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [...defaultRoutes, ...authRoutes]
