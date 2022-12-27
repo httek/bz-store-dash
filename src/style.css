@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.main {
-    height: calc(100vh) !important;
-    width: calc(100vw) !important;
-    overflow: scroll;
+.body {
+    height: calc(100vh);
+    min-height: 600px !important;
+    min-width: 960px !important;
 }
 
+.body .flex .left {
+    position: static;
+}
 .auth .left {
     background: #9f9d9d;
 }

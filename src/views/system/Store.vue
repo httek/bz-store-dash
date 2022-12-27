@@ -1,11 +1,8 @@
 <template>
-  <div class="container-full w-full p-4">
+  <div class="p-4">
     <PageHeader add-btn export-btn @on-add="onOp" :path="['系统管理', '店铺管理']">
       <template #default>
         <el-form :inline="true" :model="filterForm" class="my-2 mt-5">
-          <el-form-item label="商户">
-            <el-input clearable v-model="filterForm.partner" placeholder="按商户名称搜索"/>
-          </el-form-item>
           <el-form-item label="店铺">
             <el-input clearable v-model="filterForm.name" placeholder="按店铺名称搜索"/>
           </el-form-item>
@@ -41,7 +38,6 @@
         <el-empty description="暂无数据"></el-empty>
       </template>
       <el-table-column type="selection" width="55"/>
-      <el-table-column fixed="left" width="220" prop="partner" min-width="100" label="商户"/>
       <el-table-column fixed="left" prop="name" width="65" label="店铺">
         <template #default="scope">
           <el-tooltip class="box-item" effect="dark" :content="scope.row.name"
@@ -53,7 +49,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column width="80" prop="status" label="状态">
+      <el-table-column fixed="left" width="80" prop="status" label="状态">
         <template #default="scope">
           <el-tag :type="scope.row.status === 0 ? 'danger' : ''" disable-transitions>
             {{ statusTypes[scope.row.status] || '未知' }}
@@ -68,27 +64,11 @@
           </el-tag>
         </template>
       </el-table-column>
-
-      <el-table-column width="100" prop="delivery_template" label="配送">
-        <template #default="scope">
-          <el-tooltip :disabled="!scope.row.delivery_template" class="box-item" effect="dark"
-                      :content="scope.row.delivery_template?.tips"
-                      placement="right">
-            <el-tag>{{ scope.row.delivery_template?.name || '-' }}</el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
       <el-table-column prop="deposit" min-width="100" label="保证金(¥)"/>
-      <el-table-column prop="aptitude" width="100" label="资质">
-        <template #default="scope">
-          <el-link v-if="scope.row.aptitude" :href="scope.row.aptitude" target="_blank">查看</el-link>
-          <span v-else><small>无</small></span>
-        </template>
-      </el-table-column>
       <el-table-column prop="phone" width="120" label="电话"/>
       <el-table-column width="100" class="flex justify-center" prop="sequence" label="排序"/>
-      <el-table-column prop="created_at" label="创建时间"/>
-      <el-table-column prop="created_at" label="更新时间"/>
+      <el-table-column prop="expired_at" min-width="180" label="服务截止"/>
+      <el-table-column prop="created_at" min-width="180" label="创建时间"/>
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
@@ -118,7 +98,7 @@
         <el-row :gutter="8">
           <el-col :span="12">
             <el-form-item class="w-full" label="商户名称" required prop="partner">
-              <el-input v-model="opFormModel.partner" clearable placeholder="商户名称"/>
+              <el-input :disabled="opFormModel.id > 0" v-model="opFormModel.partner" clearable placeholder="商户名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -127,8 +107,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item class="w-full" label="店铺名称" required prop="name">
-              <el-input v-model="opFormModel.name" clearable placeholder="店铺名称"/>
+            <el-form-item :disabled="opFormModel.id > 0" class="w-full" label="店铺名称" required prop="name">
+              <el-input :disabled="opFormModel.id > 0" v-model="opFormModel.name" clearable placeholder="店铺名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -154,8 +134,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item required label="店铺图标" prop="logo">
+            <el-form-item class="w-full" required label="店铺图标" prop="logo">
               <el-upload
+                  class="w-full"
                   :limit="1"
                   :on-success="onFileUploaded"
                   :on-remove="() => opFormModel.logo = ''"
@@ -164,7 +145,6 @@
                   :action="UploadApi" :headers="{ Authorization: 'Bearer ' + authStore.token }"
                   list-type="picture"
               >
-
                 <span v-show="!opFormModel.logo || opFormModel.logo === ''" class="text-blue-500"> 选择图片 </span>
               </el-upload>
               <el-dialog v-model="previewLogo" :oncancel="() => previewLogo = false">
@@ -177,6 +157,19 @@
               <el-input-number class="w-full" placeholder="押金(¥)" v-model="opFormModel.deposit"
                                controls-position="right" :min="0"
                                :precision="2" :step="100"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="w-full" label="服务截止" prop="expired_at">
+              <el-date-picker
+                  class="w-full w-auto w-max"
+                  clearable
+                  lang="zhCn"
+                  value-format="YYYY-MM-DD"
+                  v-model="opFormModel.expired_at"
+                  type="date"
+                  placeholder="服务截止日前"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -210,7 +203,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item class="w-full" label="开户银行" prop="cash_meta">
-              <el-input :disabled="[0, 2].includes(opFormModel.cash)" :value="opFormModel.cash_meta.account_bank"
+              <el-input :disabled="opFormModel.cash === 1" v-model="opFormModel.cash_meta.account_bank"
                         clearable placeholder="开户银行"/>
             </el-form-item>
           </el-col>
@@ -297,9 +290,11 @@ const validateName = async (rule: any, value: string, callback: any) => {
     return callback(new Error('名称至少2个字符'))
   }
 
-  const res = await APIs.precisSearch({key: 'name', value})
-  if (res.data && res.data.length > 0) {
-    return callback(new Error('该店铺名称已被占用'))
+  if (opFormModel.id <= 0) {
+    const res = await APIs.precisSearch({key: 'name', value})
+    if (res.data && res.data.length > 0) {
+      return callback(new Error('该店铺名称已被占用'))
+    }
   }
 
   callback()
@@ -354,13 +349,11 @@ const onOpSubmit = (form: FormInstance | undefined) => {
     }
 
     opFormButtonLoading.value = false
-    if (res.code != HTTP.OK) {
-      return ElNotification.success({title: res.msg})
+    if (res.code == HTTP.OK) {
+      ElNotification.success({title: '操作成功'})
+      onOpCancel()
+      getLists()
     }
-
-    ElNotification.success({title: '操作成功'})
-    onOpCancel()
-    getLists()
   })
 }
 

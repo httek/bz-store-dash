@@ -1,5 +1,5 @@
 <template>
-  <div v-if="authStore.token" class="container-full w-full">
+  <div v-if="authStore.token" class="h-screen w-full h-screen body">
     <!-- Header -->
     <div class="headers bg-amber-500 text-white" style="background-color: #262f3e">
       <el-menu
@@ -13,9 +13,14 @@
         <el-menu-item :route="{path: '/'}" index="0" class="flex hover-row text-white">
           <img class="my-2" src="/vite.svg">
         </el-menu-item>
-        <div class="flex-grow" />
+        <div class="flex-grow"/>
         <el-sub-menu index="2">
-          <template v-if="authStore.profile" #title> <el-icon><User /></el-icon> {{ authStore.profile?.name }}</template>
+          <template v-if="authStore.profile" #title>
+            <el-icon>
+              <User/>
+            </el-icon>
+            {{ authStore.profile?.name }}
+          </template>
           <el-menu-item index="2-1">item one</el-menu-item>
           <el-menu-item index="2-2">item two</el-menu-item>
           <el-menu-item index="2-3">item three</el-menu-item>
@@ -31,15 +36,15 @@
     <!-- End Header -->
 
     <!-- Main -->
-    <div class="flex main w-auto">
-      <div v-loading="!authStore.menus.length" class="left flex-none" :style="{'width': LeftWidth + 'px', backgroundColor: '#1e222d' }">
+    <div class="flex">
+      <div v-loading="!authStore.menus.length" class="flex-none left" :style="{ backgroundColor: '#1e222d' }">
         <Sidebar
+            :width="LeftWidth"
             :active="MenuActive"
             :menus="authStore.menus"
-            :style="{width: [LeftWidth + 'px', '!important']}" class="h-full"
             :is-collapse="LeftCollapsed"/>
       </div>
-      <div v-loading="appStore.routeLoading" class="flex-grow w-full">
+      <div v-loading="appStore.routeLoading" :style="{width: [RightWidth + 'px']}" class="flex-shrink h-full">
         <RouterView/>
       </div>
     </div>
@@ -63,20 +68,34 @@
 <script setup lang="ts">
 import {useAuthStore} from "./states/auth.state";
 import Sidebar from "./components/Sidebar.vue";
-import {ref, watch} from "vue";
-import {HeaderHeight, MaxWidth, MinWidth} from "./consts/sidebar";
+import {onMounted, onUnmounted, ref, watch} from "vue";
+import {BodyMinWidth, HeaderHeight, MaxWidth, MinWidth} from "./consts/sidebar";
 import {useRoute} from "vue-router";
 import {useStore} from "./states/app.state";
-
 
 const route = useRoute()
 const authStore = useAuthStore()
 const appStore = useStore()
 
+const cw = document.documentElement.clientWidth
 const LeftCollapsed = ref<boolean>(false)
 const LeftWidth = ref<number>(LeftCollapsed.value ? MinWidth : MaxWidth)
+const RightWidth = ref<number>(cw > BodyMinWidth ? document.documentElement.clientWidth - LeftWidth.value : BodyMinWidth)
 const MenuActive = ref<string>('/')
 watch(() => route.path, (n) => MenuActive.value = n)
 watch(LeftCollapsed, (n) => LeftWidth.value = n ? MinWidth : MaxWidth)
 
+const resizeRightWidth = () => {
+  const cw = document.documentElement.clientWidth
+  if (cw > 960) {
+    RightWidth.value = cw - LeftWidth.value
+  }
+}
+onMounted(() => {
+  window.addEventListener('resize', resizeRightWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', resizeRightWidth)
+})
 </script>
