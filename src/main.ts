@@ -3,14 +3,10 @@ import App from './App.vue'
 import './style.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import 'vform3-builds/dist/designer.style.css'
 
 import router from "./router";
-import {store} from "./states";
+import { store } from "./states";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
-// @ts-ignore
-import VForm3 from 'vform3-builds'
 
 // @ts-ignore
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
@@ -22,6 +18,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 app.use(store)
 app.use(router)
-app.use(VForm3)
-app.use(ElementPlus, {locale: zhCn})
+app.use(ElementPlus, { locale: zhCn })
 app.mount('#app')

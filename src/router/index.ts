@@ -1,12 +1,12 @@
-import {createRouter, createWebHistory, RouteRecord, RouteRecordRaw} from "vue-router";
-import {Cache} from "../utils/cache";
-import {TokenCacheKey} from "../consts/auth";
-import {useAuthStore} from "../states/auth.state";
-import {getAuthProfile} from "../apis/auth.api";
-import {menus} from "../components/data/menus";
+import { createRouter, createWebHistory, RouteRecord, RouteRecordRaw } from "vue-router";
+import { Cache } from "../utils/cache";
+import { TokenCacheKey } from "../consts/auth";
+import { useAuthStore } from "../states/auth.state";
+import { getAuthProfile } from "../apis/auth.api";
+import { menus } from "../components/data/menus";
 import 'nprogress/nprogress.css'
 import NProgress from 'nprogress'
-import {useStore} from "../states/app.state";
+import { useStore } from "../states/app.state";
 
 NProgress.configure({ easing: 'ease' });
 
@@ -37,11 +37,6 @@ const authRoutes: RouteRecordRaw[] = [
   {
     path: '/system/delivery/templates', component: () => import('../views/system/Delivery.vue'), meta: {
       title: '配送模版', auth: true
-    }
-  },
-  {
-    path: '/utils/form-builder', component: () => import('../views/utils/FormBuilder.vue'), meta: {
-      auth: false, title: 'Form Builder'
     }
   }
 ]
