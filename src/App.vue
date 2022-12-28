@@ -64,8 +64,8 @@ const MenuActive = computed<string>(() => route.path)
 const onLogout = async () => {
   const appStore = useStore()
   appStore.routeLoading = true;
-  // Cache.forget(TokenCacheKey)
-  // authStore.token = ''
-  // await router.replace({path: '/auth/login'})
+  Cache.forget(TokenCacheKey)
+  authStore.token = ''
+  await router.replace({path: '/auth/login'})
 }
 </script>
