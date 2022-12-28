@@ -54,7 +54,6 @@
 
 <script setup lang="ts">
 import {Menu} from "../models/menu";
-import {MaxWidth} from "../consts/sidebar";
 
 defineProps<{isCollapse: boolean, width?: number, active: string, menus: Array<Menu>}>()
 </script>
