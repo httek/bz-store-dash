@@ -1197,6 +1197,11 @@ util-deprecate@^1.0.2:
   resolved "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
+vform3-builds@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.npmmirror.com/vform3-builds/-/vform3-builds-3.0.8.tgz#e1ecb435aef5b04d154349cf2d5e630c854e8bb3"
+  integrity sha512-ipfwAlFcZ87/asYmeYBqAtwXlq7pB4WRpwGsF2dW310GUmy8RrIm5sRklntTi4m6xuZCXwhkOFXkHokTOCkCpg==
+
 vite@^4.0.0:
   version "4.0.3"
   resolved "https://registry.npmmirror.com/vite/-/vite-4.0.3.tgz#de27ad3f263a03ae9419cdc8bc07721eadcba8b9"

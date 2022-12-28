@@ -22,5 +22,12 @@ export const menus: Menu[] = [
         name: 'Delivery', path: '/system/delivery/templates', title: '配送模版', icon: 'Van', id: 8
       },
     ]
+  },
+  {
+    name: 'Util', path: '/utils', title: '辅助工具', icon: 'Tool', id: 100, children: [
+      {
+        path: '/utils/form-builder', title: 'Form Builder', 'icon': 'Cog', id: 0
+      }
+    ]
   }
 ];

@@ -38,6 +38,11 @@ const authRoutes: RouteRecordRaw[] = [
     path: '/system/delivery/templates', component: () => import('../views/system/Delivery.vue'), meta: {
       title: '配送模版', auth: true
     }
+  },
+  {
+    path: '/utils/form-builder', component: () => import('../views/utils/FormBuilder.vue'), meta: {
+      auth: false, title: 'Form Builder'
+    }
   }
 ]
 

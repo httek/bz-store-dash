@@ -8,7 +8,6 @@
         <el-input show-password v-model="loginForm.password" placeholder="请输入密码" type="password" />
       </el-form-item>
       <el-form-item>
-        {{ value }}
         <el-button type="primary" class="w-full bg-blue-600" @click="submitForm(ruleFormRef)">登录
         </el-button>
       </el-form-item>
