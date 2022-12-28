@@ -148,7 +148,7 @@
                 <span v-show="!opFormModel.logo || opFormModel.logo === ''" class="text-blue-500"> 选择图片 </span>
               </el-upload>
               <el-dialog v-model="previewLogo" :oncancel="() => previewLogo = false">
-                <img w-full :src="opFormModel.logo" alt="店铺图标"/>
+                <img w-full :src="opFormModel.logo || ''" alt="店铺图标"/>
               </el-dialog>
             </el-form-item>
           </el-col>
@@ -276,7 +276,7 @@ const filterInit = {
   cash_meta: {account: '', account_name: '', account_bank: ''},
   address: '',
   owner_id: 0,
-  created_at: [],
+  created_at: undefined,
   delivery_template_id: 0
 }
 const filterForm = reactive({...filterInit})
@@ -299,7 +299,7 @@ const validateName = async (rule: any, value: string, callback: any) => {
 
   callback()
 }
-const validatePartner = async (rule: any, value: string, callback: any) => {
+const validatePartner = (rule: any, value: string, callback: any) => {
   if (value.length < 2) {
     return callback(new Error('名称至少2个字符'))
   }
@@ -310,11 +310,11 @@ const validatePartner = async (rule: any, value: string, callback: any) => {
 const opVisible = ref<boolean>(false)
 const opFormRef = ref<FormInstance>()
 const opFormButtonLoading = ref(false)
-const opFormModelInit: Store = {id: 0, status: 2, deduct: 0, deposit: 0, cash: 0, cash_meta: {}}
+const opFormModelInit: Store = {id: 0, status: 2, deduct: 0, deposit: 0, cash: 0, cash_meta: {}, expired_at: '', description: ''}
 const opFormModel = reactive({...opFormModelInit})
 const opFormRules = reactive({
   partner: [{validator: validatePartner, trigger: 'blur'}],
-  name: [{validator: validateName, trigger: 'blur'}]
+  name: [{asyncValidator: validateName, trigger: 'blur'}]
 })
 const previewLogo = ref<boolean>(false)
 const onFileUploaded = (response: Response) => {

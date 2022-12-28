@@ -1,6 +1,5 @@
 <template>
   <el-menu
-      :style="{width: (width || MaxWidth) + 'px'}"
       active-text-color="#fff"
       background-color="#1e222d"
       text-color="#7c878e"
@@ -55,7 +54,7 @@
 
 <script setup lang="ts">
 import {Menu} from "../models/menu";
-import {MaxWidth, MinWidth} from "../consts/sidebar";
+import {MaxWidth} from "../consts/sidebar";
 
 defineProps<{isCollapse: boolean, width?: number, active: string, menus: Array<Menu>}>()
 </script>

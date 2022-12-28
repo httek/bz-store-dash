@@ -7,17 +7,6 @@
       <el-form-item label="密码" prop="password">
         <el-input show-password v-model="loginForm.password" placeholder="请输入密码" type="password" />
       </el-form-item>
-
-      <el-form-item>
-        <el-date-picker
-            v-model="value"
-            type="daterange"
-            range-separator="To"
-            start-placeholder="Start date"
-            end-placeholder="End date"
-            value-format="YYYY-MM-DD"
-        />
-      </el-form-item>
       <el-form-item>
         {{ value }}
         <el-button type="primary" class="w-full bg-blue-600" @click="submitForm(ruleFormRef)">登录

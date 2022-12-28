@@ -22,6 +22,8 @@ export interface Store {
   owner_id?: number
   delivery_template_id?: number | null
   status?: number
+  description?: string
+  expired_at?: string
   created_at?: string
   updated_at?: string
 }
