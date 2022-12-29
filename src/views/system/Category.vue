@@ -27,7 +27,7 @@
       <el-table-column prop="name" label="名称" />
       <el-table-column width="80" prop="cover" label="图标">
         <template #default="scope">
-          <el-image v-if="scope.row.cover" class="rounded" style="height: 28px" :preview-src-list="[scope.row.cover]"
+          <el-image v-if="scope.row.cover" class="cover rounded" :preview-src-list="[scope.row.cover]"
             :src="scope.row.cover" fit="contain" />
         </template>
       </el-table-column>

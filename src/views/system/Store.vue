@@ -30,10 +30,10 @@
         <el-empty description="暂无数据"></el-empty>
       </template>
       <el-table-column type="selection" width="55" />
-      <el-table-column fixed="left" prop="name" label="名称" />
+      <el-table-column fixed="left" min-width="120" prop="name" label="名称" />
       <el-table-column fixed="left" prop="name" width="65" label="店铺">
         <template #default="scope">
-          <el-avatar shape="square" :size="36" :src="scope.row.logo">{{ scope.row.name.substring(0, 2) }} </el-avatar>
+          <el-avatar class="cover" shape="square" :size="36" :src="scope.row.logo">{{ scope.row.name.substring(0, 2) }} </el-avatar>
         </template>
       </el-table-column>
       <el-table-column fixed="left" width="80" prop="status" label="状态">

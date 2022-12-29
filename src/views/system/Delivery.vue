@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column prop="type" label="类型">
         <template #default="scope">
-          <el-tag>{{ types[scope.row.type] || '-' }}</el-tag>
+          <el-tag disable-transitions >{{ types[scope.row.type] || '-' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column width="80" prop="cost" label="费用">

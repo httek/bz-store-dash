@@ -2,21 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.body {
-    height: calc(100vh);
-    min-height: 600px !important;
-    min-width: 960px !important;
-}
-
-.body .flex .left {
-    position: static;
-}
-.auth .left {
-    background: #9f9d9d;
-}
-
-@media (max-width: 800px) {
-    .auth .left {
-        display: none;
-    }
+.cover {
+    height: 36px;
+    width: 36px;
 }
