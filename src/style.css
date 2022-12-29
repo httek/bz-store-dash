@@ -6,3 +6,11 @@
     height: 36px;
     width: 36px;
 }
+
+.hide-upload-btn .el-upload {
+    display: none !important;
+}
+
+.hide-upload-btn .el-upload-list li span .el-upload-list__item-preview {
+    display: none !important;
+}

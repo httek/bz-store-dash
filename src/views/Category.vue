@@ -1,17 +1,17 @@
 <template>
-  <div class="container-full w-full p-4">
+  <div class="p-4">
     <PageHeader add-btn @on-add="onAddVisible" :path="['系统管理', `分类列表`]">
       <template #default>
         <el-form :inline="true" :model="searchFormModel" class="my-2 mt-5">
-          <el-form-item label="类型">
+          <el-form-item class="mb-2" label="类型">
             <el-select v-model="searchFormModel.type" placeholder="请选择类型">
               <el-option label="商品分类" :value="0" />
             </el-select>
           </el-form-item>
-          <el-form-item label="名称">
+          <el-form-item class="mb-2" label="名称">
             <el-input v-model="searchFormModel.name" placeholder="按名称搜索" />
           </el-form-item>
-          <el-form-item>
+          <el-form-item class="mb-2">
             <el-button type="primary" @click="loadCategories">搜索</el-button>
             <el-button @click="onResetSearchForm">重置</el-button>
           </el-form-item>
@@ -19,33 +19,34 @@
       </template>
     </PageHeader>
     <!-- Data view -->
-    <el-table :border="true" stripe :data="items" row-key="id" :default-expand-all="true"
-      highlight-current-row table-layout="auto">
+    <el-table :border="true" stripe :data="items" row-key="id" highlight-current-row>
       <template #empty>
         <el-empty description="暂无数据"></el-empty>
       </template>
-      <el-table-column prop="name" label="名称">
+      <el-table-column align="center" prop="name" label="名称">
         <template #default="scope">
-          <el-icon v-if="scope.row.parent"><BottomRight /></el-icon> {{ scope.row.name  }}
+          <el-icon v-if="scope.row.parent">
+            <BottomRight />
+          </el-icon> {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column width="80" prop="cover" label="图标">
+      <el-table-column align="center" width="80" prop="cover" label="图标">
         <template #default="scope">
           <el-image v-if="scope.row.cover" class="cover rounded" :preview-src-list="[scope.row.cover]"
             :src="scope.row.cover" fit="contain" />
         </template>
       </el-table-column>
-      <el-table-column width="80" prop="status" label="状态">
+      <el-table-column align="center" width="80" prop="status" label="状态">
         <template #default="scope">
           <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{ scope.row.status ? '正常' : '禁用'
-          }}
+}}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column width="100" class="flex justify-center" prop="sequence" label="排序" />
-      <el-table-column prop="created_at" label="创建时间" />
-      <el-table-column prop="created_at" label="更新时间" />
-      <el-table-column fixed="right" label="操作" width="120">
+      <el-table-column align="center" width="100" class="flex justify-center" prop="sequence" label="排序" />
+      <el-table-column align="center" prop="created_at" label="创建时间" />
+      <el-table-column align="center" prop="created_at" label="更新时间" />
+      <el-table-column align="center" fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link @click="onAddVisible(scope.row)" class="hover:text-blue-500">编辑</el-button>
           <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
@@ -70,13 +71,13 @@
           <el-input v-model="addFormModel.name" clearable placeholder="请输入分类名称" />
         </el-form-item>
         <el-form-item label="封面">
-          <el-upload accept="image/png,image/jpg,image/jpeg" class="w-full" v-model="addFormModel.cover"
-            :action="UploadApi" :headers="{ Authorization: 'Bearer ' + authStore.token }" list-type="picture" :limit="1"
-            :on-success="onFileUploaded" :on-remove="() => addFormModel.cover = ''">
-            <el-icon size="24" class="mr-4 text-blue-500">
-              <UploadFilled />
+          <el-upload class="w-full" :class="{ 'hide-upload-btn': addFormModel.cover }" :limit="1"
+            :on-success="onFileUploaded" :on-remove="() => addFormModel.cover = ''"
+            accept="image/png,image/jpg,image/jpeg" :file-list="uploadedFiles" :action="UploadApi"
+            :headers="{ Authorization: 'Bearer ' + authStore.token }" list-type="picture-card">
+            <el-icon>
+              <Plus />
             </el-icon>
-            选择文件
           </el-upload>
         </el-form-item>
         <el-form-item label="排序">
@@ -115,7 +116,7 @@ import { CategoryAPIs } from "../apis/category.api";
 import { HTTP, UploadApi } from "../consts";
 import { useAuthStore } from "../states/auth.state";
 import { Response } from "../bags/response";
-import type { FormInstance } from "element-plus";
+import type { FormInstance, UploadUserFile } from "element-plus";
 import { validators } from "../validators/index";
 import { ElNotification } from "element-plus";
 import PageHeader from "../components/PageHeader.vue";
@@ -159,6 +160,8 @@ const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<any>({
   name: [{ validator: validators.nameRequiredWithMin2Len, trigger: 'blur' }]
 })
+
+const uploadedFiles = ref<UploadUserFile[]>([])
 const onFileUploaded = (response: Response) => addFormModel.cover = (response.data as string)
 const onAddVisible = async (row?: CategoryModel) => {
   const cateRes = (await CategoryAPIs.selector()).data
@@ -168,6 +171,9 @@ const onAddVisible = async (row?: CategoryModel) => {
 
   if (row) {
     Object.assign(addFormModel, row)
+    if (row.cover) {
+      uploadedFiles.value = [{ name: row.cover, url: row.cover }]
+    }
   }
 
   addDialogVisible.value = true

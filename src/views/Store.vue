@@ -1,49 +1,49 @@
 <template>
   <div class="p-4">
-    <PageHeader add-btn export-btn @on-add="onOp" :path="['系统管理', '店铺管理']">
+    <PageHeader add-btn @on-add="onOp" :path="['系统管理', '店铺管理']">
       <template #default>
         <el-form :inline="true" :model="filterForm" class="my-2 mt-5">
-          <el-form-item label="店铺">
+          <el-form-item class="mb-2" label="店铺">
             <el-input clearable v-model="filterForm.name" placeholder="按店铺名称搜索" />
           </el-form-item>
-          <el-form-item label="状态">
+          <el-form-item class="mb-2" label="状态">
             <el-select clearable v-model="filterForm.status" placeholder="状态">
               <el-option label="全部" :value="-1" />
               <el-option v-for="(name, index) of statusTypes" :label="name" :value="index" />
             </el-select>
           </el-form-item>
-          <el-form-item label="创建时间">
+          <el-form-item class="mb-2" label="创建时间">
             <el-date-picker style="width: 240px" v-model="filterForm.created_at" value-format="YYYY-MM-DD"
               type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" />
           </el-form-item>
-          <el-form-item>
+          <el-form-item class="mb-2">
             <el-button type="primary" @click="getLists()">搜索</el-button>
             <el-button @click="onResetFilter()">重置</el-button>
           </el-form-item>
         </el-form>
       </template>
     </PageHeader>
-
     <el-table style="width: 100% !important;" :border="true" :data="items.data" row-key="id" highlight-current-row
       stripe>
       <template #empty>
         <el-empty description="暂无数据"></el-empty>
       </template>
-      <el-table-column type="selection" width="55" />
-      <el-table-column fixed="left" min-width="120" prop="name" label="名称" />
-      <el-table-column fixed="left" prop="name" width="65" label="店铺">
+      <el-table-column align="center" type="selection" width="50" />
+      <el-table-column align="center" fixed="left" min-width="120" prop="name" label="名称" />
+      <el-table-column align="center" fixed="left" prop="name" width="65" label="店铺">
         <template #default="scope">
-          <el-avatar class="cover" shape="square" :size="36" :src="scope.row.logo">{{ scope.row.name.substring(0, 2) }} </el-avatar>
+          <el-avatar class="cover" shape="square" :size="36" :src="scope.row.logo">{{ scope.row.name.substring(0, 2) }}
+          </el-avatar>
         </template>
       </el-table-column>
-      <el-table-column fixed="left" width="80" prop="status" label="状态">
+      <el-table-column align="center" fixed="left" width="80" prop="status" label="状态">
         <template #default="scope">
           <el-tag :type="scope.row.status === 0 ? 'danger' : ''" disable-transitions>
             {{ statusTypes[scope.row.status] || '未知' }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column width="100" prop="cash_type" label="提现">
+      <el-table-column align="center" width="100" prop="cash_type" label="提现">
         <template #default="scope">
           <el-tag :type="scope.row.cash === 1 ? 'success' : ''" disable-transitions>{{
     scope.row.cash ? '对私' : '对共'
@@ -51,12 +51,12 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="deposit" min-width="100" label="保证金(¥)" />
-      <el-table-column prop="phone" width="120" label="电话" />
-      <el-table-column width="100" class="flex justify-center" prop="sequence" label="排序" />
-      <el-table-column prop="expired_at" min-width="180" label="服务截止" />
-      <el-table-column prop="created_at" min-width="180" label="创建时间" />
-      <el-table-column fixed="right" label="操作" width="120">
+      <el-table-column align="center" prop="deposit" min-width="100" label="保证金(¥)" />
+      <el-table-column align="center" prop="phone" width="130" label="电话" />
+      <el-table-column align="center" width="100" class="flex justify-center" prop="sequence" label="排序" />
+      <el-table-column align="center" prop="expired_at" min-width="180" label="服务截止" />
+      <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
+      <el-table-column align="center" fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
           <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
@@ -106,7 +106,8 @@
           </el-col>
           <el-col :span="24">
             <el-form-item class="w-full" required label="店铺图标" prop="logo">
-              <el-upload class="w-full" :limit="1" :on-success="onFileUploaded" :on-remove="() => opFormModel.logo = ''"
+              <el-upload class="w-full" :class="{ 'hide-upload-btn': opFormModel.logo }" :limit="1"
+                :on-success="onFileUploaded" :on-remove="() => opFormModel.logo = ''"
                 accept="image/png,image/jpg,image/jpeg" :file-list="uploadedFiles" :action="UploadApi"
                 :headers="{ Authorization: 'Bearer ' + authStore.token }" list-type="picture-card">
                 <el-icon>
@@ -126,8 +127,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item class="w-full" label="服务截止" prop="expired_at">
-              <el-date-picker clearable lang="zhCn" value-format="YYYY-MM-DD" v-model="opFormModel.expired_at"
-                type="date" placeholder="服务截止日前" />
+              <el-date-picker clearable lang="zhCn" value-format="YYYY-MM-DD HH:mm:ss" v-model="opFormModel.expired_at"
+                type="datetime" placeholder="服务截止日前" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -202,6 +203,7 @@ import { HTTP, UploadApi } from "../consts";
 import { Store } from "../models/store";
 import { Admin } from "../models/admin";
 import { useAuthStore } from "../states/auth.state";
+import { ro } from "element-plus/es/locale";
 
 onMounted(() => getLists())
 
@@ -278,9 +280,12 @@ const previewLogo = ref<boolean>(false)
 const onFileUploaded = (response: Response) => {
   opFormModel.logo = response.data
 }
-const onOp = (row?: Delivery) => {
+const onOp = (row?: Store) => {
   if (row) {
     Object.assign(opFormModel, row)
+    if (row.logo) {
+      uploadedFiles.value = [{ name: row.logo, url: row.logo }]
+    }
   }
 
   opVisible.value = true

@@ -32,6 +32,9 @@
         </el-menu>
       </el-header>
       <el-main class="p-0">
+        <el-alert type="warning" show-icon :closable="false">
+          <p>近期服务维护，请妥善保存数据。</p>
+        </el-alert>
         <RouterView />
       </el-main>
       <!-- <el-footer>Footer</el-footer> -->
