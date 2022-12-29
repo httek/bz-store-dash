@@ -24,7 +24,11 @@
       <template #empty>
         <el-empty description="暂无数据"></el-empty>
       </template>
-      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="name" label="名称">
+        <template #default="scope">
+          <el-icon v-if="scope.row.parent"><BottomRight /></el-icon> {{ scope.row.name  }}
+        </template>
+      </el-table-column>
       <el-table-column width="80" prop="cover" label="图标">
         <template #default="scope">
           <el-image v-if="scope.row.cover" class="cover rounded" :preview-src-list="[scope.row.cover]"
@@ -138,11 +142,11 @@ const onResetSearchForm = () => {
 let categoriesSelector = reactive<treeNode[]>([])
 function makeTreeNode(item: CategoryModel, disabled?: number): treeNode {
   let node: treeNode = { value: item.id, label: item.name, disabled: disabled == item.id, children: [] }
-  if (item.children?.length) {
-    for (const child of item.children) {
-      node.children?.push(makeTreeNode(child, disabled))
-    }
-  }
+  // if (item.children?.length) {
+  //   for (const child of item.children) {
+  //     node.children?.push(makeTreeNode(child, disabled))
+  //   }
+  // }
 
   return node
 }

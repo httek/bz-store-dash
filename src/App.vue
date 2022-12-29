@@ -31,7 +31,7 @@
           </el-sub-menu>
         </el-menu>
       </el-header>
-      <el-main v-loading="appStore.routeLoading" class="p-0">
+      <el-main class="p-0">
         <RouterView />
       </el-main>
       <!-- <el-footer>Footer</el-footer> -->
@@ -60,7 +60,6 @@ import { useStore } from "./states/app.state";
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const appStore = useStore()
 
 const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || false)
 const LeftWidth = computed<number>(() => LeftCollapsed.value ? Layout.AsideMinWidth : Layout.AsideMaxWidth)
