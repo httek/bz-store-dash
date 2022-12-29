@@ -192,17 +192,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from "vue";
-import { StoreAPIs as APIs } from "../../apis/store.api";
-import { AdminAPIs } from "../../apis/admin.api";
-import { Paginate, Response } from "../../bags/response";
+import { onMounted, reactive, ref } from "vue";
+import { StoreAPIs as APIs } from "../apis/store.api";
+import { AdminAPIs } from "../apis/admin.api";
+import { Paginate, Response } from "../bags/response";
 import { ElNotification, FormInstance, UploadUserFile } from "element-plus";
-import { Delivery } from "../../models/delivery";
-import { HTTP, UploadApi } from "../../consts";
-import { Store } from "../../models/store";
-import { Admin } from "../../models/admin";
-import { useAuthStore } from "../../states/auth.state";
-import { Plus } from "@element-plus/icons-vue";
+import { Delivery } from "../models/delivery";
+import { HTTP, UploadApi } from "../consts";
+import { Store } from "../models/store";
+import { Admin } from "../models/admin";
+import { useAuthStore } from "../states/auth.state";
 
 onMounted(() => getLists())
 

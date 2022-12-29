@@ -14,28 +14,28 @@ const defaultRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/home/Default.vue')
+    component: () => import('../views/Dash.vue')
   },
   {
     path: '/auth/login',
     name: 'Login',
-    component: () => import('../views/auth/Login.vue')
+    component: () => import('../views/Login.vue')
   }
 ]
 
 const authRoutes: RouteRecordRaw[] = [
   {
-    path: '/system/categories', component: () => import(`../views/system/Category.vue`), meta: {
+    path: '/system/categories', component: () => import(`../views/Category.vue`), meta: {
       title: '分类管理', auth: true
     }
   },
   {
-    path: '/system/stores', component: () => import((`../views/system/Store.vue`)), meta: {
+    path: '/system/stores', component: () => import((`../views/Store.vue`)), meta: {
       title: '店铺管理', auth: true
     }
   },
   {
-    path: '/system/delivery/templates', component: () => import('../views/system/Delivery.vue'), meta: {
+    path: '/system/delivery/templates', component: () => import('../views/Delivery.vue'), meta: {
       title: '配送模版', auth: true
     }
   }

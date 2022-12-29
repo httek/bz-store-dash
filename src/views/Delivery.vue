@@ -122,12 +122,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from "vue";
-import { DeliveryAPIs } from "../../apis/delivery.api";
-import { Paginate, Response } from "../../bags/response";
+import { onMounted, reactive, ref } from "vue";
+import { DeliveryAPIs } from "../apis/delivery.api";
+import { Paginate, Response } from "../bags/response";
 import { ElNotification, FormInstance } from "element-plus";
-import { Delivery } from "../../models/delivery";
-import { HTTP } from "../../consts";
+import { Delivery } from "../models/delivery";
+import { HTTP } from "../consts";
 
 onMounted(() => getDeliveryList())
 

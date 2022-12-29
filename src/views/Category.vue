@@ -110,15 +110,15 @@
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-import { Category as CategoryModel } from "../../models/category";
-import { CategoryAPIs } from "../../apis/category.api";
-import { HTTP, UploadApi } from "../../consts";
-import { useAuthStore } from "../../states/auth.state";
-import { Response } from "../../bags/response";
+import { Category as CategoryModel } from "../models/category";
+import { CategoryAPIs } from "../apis/category.api";
+import { HTTP, UploadApi } from "../consts";
+import { useAuthStore } from "../states/auth.state";
+import { Response } from "../bags/response";
 import type { FormInstance } from "element-plus";
-import { validators } from "../../validators/index";
+import { validators } from "../validators/index";
 import { ElNotification } from "element-plus";
-import PageHeader from "../../components/PageHeader.vue";
+import PageHeader from "../components/PageHeader.vue";
 
 export interface treeNode {
   value: number

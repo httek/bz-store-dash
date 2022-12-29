@@ -18,13 +18,13 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
-import { validators } from '../../validators/index'
-import { login } from "../../apis/auth.api";
-import { Cache } from "../../utils/cache";
-import { TokenCacheKey } from "../../consts/auth";
+import { validators } from '../validators'
+import { login } from "../apis/auth.api";
+import { Cache } from "../utils/cache";
+import { TokenCacheKey } from "../consts/auth";
 import { useRoute, useRouter } from "vue-router";
-import { useAuthStore } from "../../states/auth.state";
-import { HTTP } from '../../consts';
+import { useAuthStore } from "../states/auth.state";
+import { HTTP } from '../consts';
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
