@@ -6,6 +6,7 @@
           <el-form-item class="mb-2" label="类型">
             <el-select v-model="searchFormModel.type" placeholder="请选择类型">
               <el-option label="商品分类" :value="0" />
+              <el-option label="品牌分类" :value="1" />
             </el-select>
           </el-form-item>
           <el-form-item class="mb-2" label="名称">
@@ -63,6 +64,11 @@
       class="px-5" destroy-on-close :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form status-icon ref="addFormRef" :rules="addFormRules" :model="addFormModel" label-width="80px"
         class="w-full">
+        <el-form-item label="类型">
+          <el-radio-group v-model="addFormModel.type">
+            <el-radio-button v-for="(name, index) of ['商品分类', '品牌分类']" :label="index">{{ name }}</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="父级">
           <el-tree-select placeholder="父级分类，可选" class="w-full" v-model="addFormModel.parent" :data="categoriesSelector"
             check-strictly :render-after-expand="false" />
@@ -110,7 +116,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { Category as CategoryModel } from "../models/category";
 import { CategoryAPIs } from "../apis/category.api";
 import { HTTP, UploadApi } from "../consts";
@@ -136,7 +142,7 @@ const searchFormInit = { name: '', type: 0 }
 const searchFormModel = reactive({ ...searchFormInit })
 const loadCategories = async () => items.value = (await CategoryAPIs.list(searchFormModel)).data
 const onResetSearchForm = () => {
-  Object.assign(searchFormModel, searchFormInit)
+  Object.assign(searchFormModel, { name: '' })
   loadCategories()
 }
 
@@ -154,8 +160,12 @@ function makeTreeNode(item: CategoryModel, disabled?: number): treeNode {
 
 const addDialogVisible = ref<boolean>(false)
 const addFormButtonLoading = ref<boolean>(false)
-const addFormModelInit = { parent: null, name: '', cover: '', sequence: 0, status: 1, id: 0 }
+const addFormModelInit = { parent: null, name: '', cover: '', sequence: 0, status: 1, id: 0, type: 0 }
 const addFormModel = reactive({ ...addFormModelInit })
+watch(() => addFormModel.type, async (n) => {
+  await getCategorySelector(n)
+  addFormModel.parent = null
+})
 const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<any>({
   name: [{ validator: validators.nameRequiredWithMin2Len, trigger: 'blur' }]
@@ -163,11 +173,16 @@ const addFormRules = reactive<any>({
 
 const uploadedFiles = ref<UploadUserFile[]>([])
 const onFileUploaded = (response: Response) => addFormModel.cover = (response.data as string)
-const onAddVisible = async (row?: CategoryModel) => {
-  const cateRes = (await CategoryAPIs.selector()).data
+const getCategorySelector = async (t: number = 0) => {
+  categoriesSelector.splice(0)
+  const cateRes = (await CategoryAPIs.selector(t)).data
   for (const cate of cateRes) {
-    categoriesSelector.push(makeTreeNode(cate, row?.id))
+    categoriesSelector.push(makeTreeNode(cate, addFormModel.id))
   }
+}
+const onAddVisible = async (row?: CategoryModel) => {
+  const Type = row ? row.type : 0
+  await getCategorySelector(Type)
 
   if (row) {
     Object.assign(addFormModel, row)

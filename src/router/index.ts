@@ -25,18 +25,23 @@ const defaultRoutes: RouteRecordRaw[] = [
 
 const authRoutes: RouteRecordRaw[] = [
   {
-    path: '/system/categories', component: () => import(`../views/Category.vue`), meta: {
-      title: '分类管理', auth: true
+    path: '/brands', component: () => import(`../views/Brand.vue`), meta: {
+      title: '品牌', auth: true
     }
   },
   {
-    path: '/system/stores', component: () => import((`../views/Store.vue`)), meta: {
-      title: '店铺管理', auth: true
+    path: '/categories', component: () => import(`../views/Category.vue`), meta: {
+      title: '分类', auth: true
     }
   },
   {
-    path: '/system/delivery/templates', component: () => import('../views/Delivery.vue'), meta: {
-      title: '配送模版', auth: true
+    path: '/stores', component: () => import((`../views/Store.vue`)), meta: {
+      title: '店铺', auth: true
+    }
+  },
+  {
+    path: '/delivery', component: () => import('../views/Delivery.vue'), meta: {
+      title: '配送', auth: true
     }
   }
 ]
