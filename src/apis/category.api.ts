@@ -1,5 +1,5 @@
 import http from "../utils/http";
-import { Response } from "../bags/response";
+import { PaginateResponse, Response } from "../bags/response";
 import { Category } from "../models/category";
 
 export namespace CategoryAPIs {
@@ -9,8 +9,8 @@ export namespace CategoryAPIs {
    * @param search 
    * @returns Response
    */
-  export function list(search?: { type: number, name: string }): Promise<Response> {
-    return http.get('v1/system/categories', { params: search });
+  export function list(page: number = 1, size: number = 10, search?: { type: number, name: string }): Promise<PaginateResponse> {
+    return http.get('v1/system/categories', { params: { page, size, ...search } });
   }
 
   /**

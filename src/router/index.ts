@@ -43,6 +43,16 @@ const authRoutes: RouteRecordRaw[] = [
     path: '/delivery', component: () => import('../views/Delivery.vue'), meta: {
       title: '配送', auth: true
     }
+  },
+  {
+    path: '/products', component: () => import('../views/Product.vue'), meta: {
+      title: '产品', auth: true
+    }
+  },
+  {
+    path: '/goods', component: () => import(`../views/Goods.vue`), meta: {
+      title: '商品', auth: true
+    }
   }
 ]
 

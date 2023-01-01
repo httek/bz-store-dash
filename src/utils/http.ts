@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { Cache } from "./cache";
 import { TokenCacheKey } from "../consts/auth";
-import { ElNotification } from "element-plus";
+import { ElMessage, ElNotification } from "element-plus";
 import { Response } from "../bags/response";
 
 const http = axios.create()
@@ -26,7 +26,7 @@ http.interceptors.request.use(config => {
 http.interceptors.response.use(async (httpResponse: AxiosResponse) => {
   const response = httpResponse.data as (Response | any)
   if (response.code != 2000) {
-    ElNotification.warning({ title: response.msg })
+    ElMessage.warning(response.msg)
   }
 
   return response

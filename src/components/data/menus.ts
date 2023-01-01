@@ -13,5 +13,11 @@ export const menus: Menu[] = [
   },
   {
     name: 'Delivery', path: '/delivery', title: '配送', icon: 'Van', id: 8
+  },
+  {
+    name: 'Product', path: '/products', title: '产品', icon: 'Van', id: 198
+  },
+  {
+    name: 'Goods', path: '/goods', title: '商品', icon: 'Van', id: 1980
   }
 ];

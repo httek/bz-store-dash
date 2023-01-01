@@ -4,9 +4,9 @@
       <template #default>
         <el-form :inline="true" :model="searchFormModel" class="my-2 mt-5">
           <el-form-item class="mb-2" label="类型">
-            <el-select v-model="searchFormModel.type" placeholder="请选择类型">
+            <el-select :disabled="true" v-model="searchFormModel.type" placeholder="请选择类型">
               <el-option label="商品分类" :value="0" />
-              <el-option label="品牌分类" :value="1" />
+              <!-- <el-option label="品牌分类" :value="1" /> -->
             </el-select>
           </el-form-item>
           <el-form-item class="mb-2" label="名称">
@@ -24,7 +24,7 @@
       <template #empty>
         <el-empty description="暂无数据"></el-empty>
       </template>
-      <el-table-column align="center" prop="name" label="名称">
+      <el-table-column align="left" prop="name" label="名称">
         <template #default="scope">
           <el-icon v-if="scope.row.parent">
             <BottomRight />
@@ -33,8 +33,7 @@
       </el-table-column>
       <el-table-column align="center" width="80" prop="cover" label="图标">
         <template #default="scope">
-          <el-image v-if="scope.row.cover" class="cover rounded" :preview-src-list="[scope.row.cover]"
-            :src="scope.row.cover" fit="contain" />
+          <el-image v-if="scope.row.cover" class="cover rounded" :src="scope.row.cover" fit="contain" />
         </template>
       </el-table-column>
       <el-table-column align="center" width="80" prop="status" label="状态">
@@ -59,16 +58,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="flex justify-end w-full mt-4" v-if="items.length">
+      <el-pagination @current-change="(page) => { paginate.page = page; loadCategories() }" class="justify-end"
+        v-model:page-size="paginate.size" :page-sizes="[10, 20, 30, 50, 100]" background
+        layout="total, sizes, prev, pager, next" :total="paginate.total" />
+    </div>
     <!-- Add -->
     <el-dialog v-model="addDialogVisible" :title="addFormModel.id > 0 ? '编辑分类' : '添加分类'" width="600px" align-center
       class="px-5" destroy-on-close :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
       <el-form status-icon ref="addFormRef" :rules="addFormRules" :model="addFormModel" label-width="80px"
         class="w-full">
-        <el-form-item label="类型">
-          <el-radio-group v-model="addFormModel.type">
-            <el-radio-button v-for="(name, index) of ['商品分类', '品牌分类']" :label="index">{{ name }}</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
         <el-form-item label="父级">
           <el-tree-select placeholder="父级分类，可选" class="w-full" v-model="addFormModel.parent" :data="categoriesSelector"
             check-strictly :render-after-expand="false" />
@@ -137,12 +136,20 @@ export interface treeNode {
 onMounted(() => loadCategories())
 const authStore = useAuthStore()
 const items = ref<CategoryModel[]>([])
+const paginate = reactive({ page: 1, size: 10, total: 0 })
 // Search
 const searchFormInit = { name: '', type: 0 }
 const searchFormModel = reactive({ ...searchFormInit })
-const loadCategories = async () => items.value = (await CategoryAPIs.list(searchFormModel)).data
+const loadCategories = async () => {
+  const pRes = await CategoryAPIs.list(paginate.page, paginate.size, searchFormModel)
+  items.value = pRes.data.data
+  paginate.page = pRes.data.page
+  paginate.size = pRes.data.size
+  paginate.total = pRes.data.total
+}
 const onResetSearchForm = () => {
   Object.assign(searchFormModel, { name: '' })
+  Object.assign(paginate, { page: 1, size: 10, total: 0 })
   loadCategories()
 }
 
@@ -162,10 +169,6 @@ const addDialogVisible = ref<boolean>(false)
 const addFormButtonLoading = ref<boolean>(false)
 const addFormModelInit = { parent: null, name: '', cover: '', sequence: 0, status: 1, id: 0, type: 0 }
 const addFormModel = reactive({ ...addFormModelInit })
-watch(() => addFormModel.type, async (n) => {
-  await getCategorySelector(n)
-  addFormModel.parent = null
-})
 const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<any>({
   name: [{ validator: validators.nameRequiredWithMin2Len, trigger: 'blur' }]
@@ -199,6 +202,7 @@ const onAddCancel = () => {
   addDialogVisible.value = false
   Object.assign(addFormModel, addFormModelInit)
   categoriesSelector = []
+  uploadedFiles.value = []
 }
 const onAddSubmit = (formEl: FormInstance | undefined) => {
   if (!formEl) return

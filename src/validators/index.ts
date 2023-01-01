@@ -1,7 +1,7 @@
 export namespace validators {
   export const nameRequiredWithMin2Len = async (rule: any, value: string, callback: any) => {
     if (value.length < 2) {
-      return callback(new Error('分类名称至少2个字符'))
+      return callback(new Error('名称至少2个字符'))
     }
 
     callback()
@@ -20,7 +20,7 @@ export namespace validators {
     if (value.length < 6) {
       return callback(new Error('密码至少是6位字符'))
     }
-  
+
     callback()
   }
 }
