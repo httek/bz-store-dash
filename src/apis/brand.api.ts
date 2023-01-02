@@ -25,4 +25,8 @@ export namespace BrandAPIs {
   export function update(id: number, item: Brand): Promise<Response> {
     return http.post(`/v1/system/brands/${id}`, item)
   }
+
+  export function select(name?: string): Promise<Response> {
+    return http.get(`/v1/system/brands/select`, { params: { name } })
+  }
 }

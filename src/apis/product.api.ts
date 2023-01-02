@@ -24,4 +24,8 @@ export namespace ProductAPIs {
   export function destroy(id: number): Promise<Response> {
     return http.delete(`${prefix}/${id}`)
   }
+
+  export function select(name?: string): Promise<Response> {
+    return http.get(`${prefix}/select`, { params: { name } })
+  }
 }

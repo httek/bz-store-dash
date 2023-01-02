@@ -14,3 +14,8 @@
 .hide-upload-btn .el-upload-list li span .el-upload-list__item-preview {
     display: none !important;
 }
+
+.hide-back .el-page-header__header .el-page-header__left .el-page-header__back,
+.hide-back .el-page-header__header .el-page-header__left .el-divider {
+    display: none;
+}

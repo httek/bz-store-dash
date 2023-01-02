@@ -198,12 +198,10 @@ import { StoreAPIs as APIs } from "../apis/store.api";
 import { AdminAPIs } from "../apis/admin.api";
 import { Paginate, Response } from "../bags/response";
 import { ElNotification, FormInstance, UploadUserFile } from "element-plus";
-import { Delivery } from "../models/delivery";
 import { HTTP, UploadApi } from "../consts";
 import { Store } from "../models/store";
 import { Admin } from "../models/admin";
 import { useAuthStore } from "../states/auth.state";
-import { ro } from "element-plus/es/locale";
 
 onMounted(() => getLists())
 

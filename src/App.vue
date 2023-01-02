@@ -31,10 +31,10 @@
           </el-sub-menu>
         </el-menu>
       </el-header>
-      <el-main class="p-0">
-        <el-alert type="warning" show-icon :closable="false">
+      <el-main class="p-0 overflow-x-hidden">
+        <!-- <el-alert type="warning" show-icon :closable="false">
           <p>近期服务维护，请妥善保存数据。</p>
-        </el-alert>
+        </el-alert> -->
         <RouterView />
       </el-main>
       <!-- <el-footer>Footer</el-footer> -->
@@ -64,7 +64,7 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
-const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || false)
+const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || true)
 const LeftWidth = computed<number>(() => LeftCollapsed.value ? Layout.AsideMinWidth : Layout.AsideMaxWidth)
 const MenuActive = computed<string>(() => route.path)
 

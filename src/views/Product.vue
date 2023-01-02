@@ -39,7 +39,8 @@
       <el-table-column align="center" prop="category.name" label="分类" />
       <el-table-column align="center" width="100" prop="status" label="状态">
         <template #default="scope">
-          <el-tag :type="statusTagColor[scope.row.status]" disable-transitions>{{ statusTypes[scope.row.status] ||
+          <el-tag :type='(statusTagColor[scope.row.status] as any)' disable-transitions>{{
+    statusTypes[scope.row.status] ||
     '-'
 }}
           </el-tag>
@@ -176,7 +177,6 @@ const getItems = async () => {
 }
 
 const categories = reactive<Category[]>([])
-const searchCategories = () => { }
 const opModelInit = { id: 0, category_id: undefined, name: '', images: [], description: '', status: 2, sequence: 0 }
 const opPanelVisible = ref<boolean>(false)
 const opModel = reactive<Product>({ ...opModelInit })
