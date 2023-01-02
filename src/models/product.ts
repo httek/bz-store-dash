@@ -1,9 +1,9 @@
 export interface Product {
-  id?: number;
+  id: number;
   category_id?: number;
   uuid?: string;
   name?: string;
-  images?: string;
+  images: string[];
   description?: string;
   status?: number;
   sequence?: number;

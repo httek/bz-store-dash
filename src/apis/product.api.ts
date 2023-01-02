@@ -18,7 +18,7 @@ export namespace ProductAPIs {
   }
 
   export function update(id: number, item: Product): Promise<Response> {
-    return http.post(`${prefix}.${id}`, item)
+    return http.post(`${prefix}/${id}`, item)
   }
 
   export function destroy(id: number): Promise<Response> {
