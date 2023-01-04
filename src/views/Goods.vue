@@ -13,7 +13,7 @@
     <template #extra>
       <div class="flex items-center">
         <el-button icon="Download" circle />
-        <el-button type="primary" icon="Plus" circle />
+        <el-button type="primary" @click="opPanelVisible = true" icon="Plus" circle />
       </div>
     </template>
 
@@ -149,6 +149,11 @@
         @current-change="(page) => { paginate.page = page; getItems() }" class="justify-end"
         @size-change="(size: number) => { paginate.size = size; getItems() }" :total="paginate.total" />
     </div>
+
+
+    <!-- Add -->
+
+    <!-- End Add -->
   </div>
 </template>
 
@@ -217,4 +222,8 @@ const onDelete = async (id: number) => {
     await getItems()
   }
 }
+
+// Add
+const opPanelVisible = ref(false)
+
 </script>

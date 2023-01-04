@@ -64,7 +64,7 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 
-const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || true)
+const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || false)
 const LeftWidth = computed<number>(() => LeftCollapsed.value ? Layout.AsideMinWidth : Layout.AsideMaxWidth)
 const MenuActive = computed<string>(() => route.path)
 
