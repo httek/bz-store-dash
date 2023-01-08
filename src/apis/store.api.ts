@@ -1,6 +1,6 @@
-import http from "../utils/http";
 import { PaginateResponse, Response } from "../bags/response";
 import { Store } from "../models/store";
+import http from "../utils/http";
 
 export interface StoreSearch {
   partner?: string
@@ -15,7 +15,7 @@ export interface StoreSearch {
 
 
 export namespace StoreAPIs {
-  const prefix = '/v1/system/stores'
+  const prefix = '/v2/stores'
 
   /**
    * Items
@@ -25,7 +25,7 @@ export namespace StoreAPIs {
    * @param search
    */
   export function list(page: number = 1, size: number = 1, search?: StoreSearch): Promise<PaginateResponse> {
-    return http.get(prefix, { params: search })
+    return http.get(prefix, { params: { page, size, ...search } })
   }
 
   /**
@@ -34,7 +34,7 @@ export namespace StoreAPIs {
    * @param search
    */
   export function precisSearch(search: { key: string, value: any, fields?: string[] }): Promise<Response> {
-    return http.get(prefix + '/precis', { params: search })
+    return http.get(prefix + '/precise', { params: search })
   }
 
   /**

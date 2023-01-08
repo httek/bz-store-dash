@@ -1,6 +1,6 @@
-import http from "../utils/http";
 import { PaginateResponse, Response } from "../bags/response";
 import { Category } from "../models/category";
+import http from "../utils/http";
 
 export namespace CategoryAPIs {
   /**
@@ -10,7 +10,7 @@ export namespace CategoryAPIs {
    * @returns Response
    */
   export function list(page: number = 1, size: number = 10, search?: { type: number, name: string }): Promise<PaginateResponse> {
-    return http.get('v1/system/categories', { params: { page, size, ...search } });
+    return http.get('v2/categories', { params: { page, size, ...search } });
   }
 
   /**
@@ -18,8 +18,8 @@ export namespace CategoryAPIs {
    * 
    * @returns Response
    */
-  export function selector(Type: number = 0): Promise<Response> {
-    return http.get('/v1/system/categories/select?type=' + Type)
+  export function selector(Type: number = 1): Promise<Response> {
+    return http.get('/v2/categories/select?type=' + Type)
   }
 
 
@@ -29,7 +29,7 @@ export namespace CategoryAPIs {
    * @param item
    */
   export function update(id: number, item: Category): Promise<Response> {
-    return http.post(`/v1/system/categories/${id}`, item)
+    return http.post(`/v2/categories/${id}`, item)
   }
 
 
@@ -39,7 +39,7 @@ export namespace CategoryAPIs {
    * @param item
    */
   export function store(item: Category): Promise<Response> {
-    return http.post('/v1/system/categories', item)
+    return http.post('/v2/categories', item)
   }
 
   /**
@@ -48,6 +48,6 @@ export namespace CategoryAPIs {
    * @param id
    */
   export function destroy(id: number): Promise<Response> {
-    return http.delete(`/v1/system/categories/${id}`)
+    return http.delete(`/v2/categories/${id}`)
   }
 }

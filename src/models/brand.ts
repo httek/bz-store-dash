@@ -3,7 +3,7 @@ import { Category } from "./category";
 export interface Brand {
   id: number;
   name: string;
-  logo?: string;
+  cover?: string;
   sequence?: number;
   status?: number;
   site?: string;

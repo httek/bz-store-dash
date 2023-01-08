@@ -4,29 +4,22 @@ import http from "../utils/http";
 
 export namespace BrandAPIs {
   export function list(page: number = 1, size: number = 10, params?: { name?: string, status?: number }): Promise<PaginateResponse> {
-    return http.get('/v1/system/brands', { params })
+    return http.get('/v2/brands', { params: { page, size, ...params } })
   }
 
   export function destroy(id: number): Promise<Response> {
-    return http.delete(`/v1/system/brands/${id}`)
+    return http.delete(`/v2/brands/${id}`)
   }
 
   export function store(item: Brand): Promise<Response> {
-    return http.post('/v1/system/brands', item)
+    return http.post('/v2/brands', item)
   }
 
-  /**
-   * Update item.
-   * 
-   * @param id 
-   * @param item 
-   * @returns Response
-   */
   export function update(id: number, item: Brand): Promise<Response> {
-    return http.post(`/v1/system/brands/${id}`, item)
+    return http.post(`/v2/brands/${id}`, item)
   }
 
   export function select(name?: string): Promise<Response> {
-    return http.get(`/v1/system/brands/select`, { params: { name } })
+    return http.get(`/v2/brands/select`, { params: { name } })
   }
 }

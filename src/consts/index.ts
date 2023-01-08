@@ -9,7 +9,7 @@ export namespace Layout {
   export const LogoHeight = 68
 }
 
-export const UploadApi = BackendApiHost.trim('/') + '/v1/utils/upload'
+export const UploadApi = BackendApiHost.trim('/') + '/v2/upload'
 
 export namespace HTTP {
   export const OK = 2000

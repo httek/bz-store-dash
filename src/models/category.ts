@@ -6,6 +6,7 @@ export interface Category {
   status: number
   sequence: number
   parent?: Category | null
+  parent_id?: number | null
   created_at: string | null
   updated_at: string | null
   children?: Category[] | null

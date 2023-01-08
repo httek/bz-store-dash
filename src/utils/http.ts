@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
-import { Cache } from "./cache";
-import { TokenCacheKey } from "../consts/auth";
 import { ElMessage, ElNotification } from "element-plus";
 import { Response } from "../bags/response";
+import { TokenCacheKey } from "../consts/auth";
+import { Cache } from "./cache";
 
 const http = axios.create()
 http.interceptors.request.use(config => {
@@ -30,7 +30,12 @@ http.interceptors.response.use(async (httpResponse: AxiosResponse) => {
   }
 
   return response
-})
+}, err => {
+  ElNotification.closeAll()
+  ElNotification.error({ title: '服务器异常，请稍后再试!', message: '服务器异常，请稍后再试!' })
+
+  return err
+});
 
 
 export default http
