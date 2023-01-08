@@ -15,3 +15,12 @@ export namespace HTTP {
   export const OK = 2000
   export const FAIL = 5000
 }
+
+
+export namespace Admin {
+  export enum AdminType {
+    Super = 0,
+    Admin,
+    StoreOwner
+  }
+}

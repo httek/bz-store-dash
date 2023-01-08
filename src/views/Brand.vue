@@ -1,5 +1,5 @@
 <template>
-  <el-page-header class="hide-back p-4 bg-gray-50">
+  <el-page-header class="hide-back p-4 bg-slate-50">
     <template #content>
       <div class="flex items-center">
         <el-icon>
@@ -7,7 +7,7 @@
         </el-icon>
         <el-breadcrumb class="mx-1" separator-icon="DArrowRight">
           <el-breadcrumb-item><b>{{ route.meta.title || '品牌' }}</b></el-breadcrumb-item>
-          <el-breadcrumb-item>品牌列表</el-breadcrumb-item>
+          <el-breadcrumb-item>列表</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
     </template>
@@ -58,8 +58,8 @@
     <el-table-column align="center" width="100" prop="status" label="状态">
       <template #default="scope">
         <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{
-    scope.row.status ? '正常' : '禁用'
-}}
+          scope.row.status ? '正常' : '禁用'
+        }}
         </el-tag>
       </template>
     </el-table-column>

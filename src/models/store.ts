@@ -1,14 +1,14 @@
 export interface CashMeta {
-  account?: string
-  account_name?: string
-  account_bank?: string
+  account?: string | null
+  account_name?: string | null
+  account_bank?: string | null
 }
 
 export interface Store {
   id: number
   partner?: string
   name?: string
-  logo?: string | null
+  cover?: string | null
   photos?: string[] | null
   cash?: number
   cash_meta: CashMeta
@@ -20,10 +20,9 @@ export interface Store {
   sequence?: number
   created_by?: string
   owner_id?: number
-  delivery_template_id?: number | null
   status?: number
   description?: string
-  expired_at?: string
+  expired_at?: string | null | ''
   created_at?: string
   updated_at?: string
 }

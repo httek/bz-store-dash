@@ -19,3 +19,7 @@
 .hide-back .el-page-header__header .el-page-header__left .el-divider {
     display: none;
 }
+
+.el-input__wrapper {
+    width: 100%;
+}
