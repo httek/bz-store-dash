@@ -38,9 +38,10 @@
     <template #empty>
       <el-empty description="暂无数据"></el-empty>
     </template>
-    <el-table-column align="left" fixed="left" prop="name" label="名称">
+    <el-table-column align="left" fixed="left" prop="name" label="名称" />
+    <el-table-column align="center" width="80" fixed="left" prop="type" label="类型">
       <template #default="scope">
-        <el-tag class="ml-2">{{ scope.row.level }}级</el-tag> {{ scope.row.name }}
+        <el-tag disable-transitions>{{ types[scope.row.type] }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column align="center" width="80" prop="cover" label="图标">
@@ -147,6 +148,7 @@ onMounted(() => loadCategories())
 const route = useRoute()
 const authStore = useAuthStore()
 const items = ref<CategoryModel[]>([])
+const types = ['商品', '品牌', '-']
 const paginate = reactive({ page: 1, size: 10, total: 0 })
 // Search
 const searchFormInit = { name: '', type: 0 }
