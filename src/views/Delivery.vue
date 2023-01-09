@@ -166,7 +166,7 @@ const getItems = async () => {
   items.value = pRes.data.data
   paginate.page = pRes.data.page
   paginate.size = pRes.data.size
-  paginate.total - pRes.data.total
+  paginate.total = pRes.data.total
   loading.value = false
 }
 
