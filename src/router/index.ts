@@ -1,12 +1,12 @@
-import { createRouter, createWebHistory, RouteRecord, RouteRecordRaw } from "vue-router";
-import { Cache } from "../utils/cache";
-import { TokenCacheKey } from "../consts/auth";
-import { useAuthStore } from "../states/auth.state";
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { getAuthProfile } from "../apis/auth.api";
 import { menus } from "../components/data/menus";
-import 'nprogress/nprogress.css'
-import NProgress from 'nprogress'
+import { TokenCacheKey } from "../consts/auth";
 import { useStore } from "../states/app.state";
+import { useAuthStore } from "../states/auth.state";
+import { Cache } from "../utils/cache";
 
 NProgress.configure({ easing: 'ease' });
 
@@ -40,7 +40,7 @@ const authRoutes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/delivery', component: () => import('../views/Delivery.vue'), meta: {
+    path: '/deliveries', component: () => import('../views/Delivery.vue'), meta: {
       title: '配送', auth: true
     }
   },

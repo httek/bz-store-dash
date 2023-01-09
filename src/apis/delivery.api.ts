@@ -1,21 +1,23 @@
 import { PaginateResponse, Response } from "../bags/response";
-import http from "../utils/http";
 import { Delivery } from "../models/delivery";
+import http from "../utils/http";
 
 export namespace DeliveryAPIs {
+	const prefix = 'v2/deliveries'
+
 	export function list(page: number = 1, size: number = 10, search?: { name: string, type: number }): Promise<PaginateResponse> {
-		return http.get('/v1/system/delivery/templates', { params: { page, size, ...search }})
+		return http.get(prefix, { params: { page, size, ...search } })
 	}
 
 	export function store(item: Delivery): Promise<Response> {
-		return http.post('/v1/system/delivery/templates', item)
+		return http.post(prefix, item)
 	}
 
 	export function destroy(id: number): Promise<Response> {
-		return http.delete(`/v1/system/delivery/templates/${id}`)
+		return http.delete(`${prefix}/${id}`)
 	}
 
 	export function update(id: number, item: Delivery): Promise<Response> {
-		return http.post(`/v1/system/delivery/templates/${id}`, item)
+		return http.post(`${prefix}/${id}`, item)
 	}
 }

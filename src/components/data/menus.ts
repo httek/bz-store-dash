@@ -12,7 +12,7 @@ export const menus: Menu[] = [
     name: 'Store', path: '/stores', title: '店铺', icon: 'Shop', id: 3
   },
   {
-    name: 'Delivery', path: '/delivery', title: '配送', icon: 'Van', id: 8
+    name: 'Delivery', path: '/deliveries', title: '配送', icon: 'Van', id: 8
   },
   {
     name: 'Product', path: '/products', title: '产品', icon: 'Van', id: 198

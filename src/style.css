@@ -23,3 +23,8 @@
 .el-input__wrapper {
     width: 100%;
 }
+
+.header-menu .is-active {
+    color: white !important;
+    border: 0 !important;
+}

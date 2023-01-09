@@ -12,10 +12,13 @@
 
     <el-container>
       <el-header class="px-0" :height="Layout.HeaderHeight + 'px'">
-        <el-menu :style="{ height: Layout.HeaderHeight + 'px' }" mode="horizontal" :ellipsis="false" text-color="white"
-          background-color="#262f3e">
-          <el-menu-item :route="{ path: '/' }" index="0" class="flex hover-row text-white">
-            <img class="my-2" src="/vite.svg">
+        <el-menu class="header-menu" :style="{ height: Layout.HeaderHeight + 'px' }" mode="horizontal" :ellipsis="false"
+          text-color="white" background-color="#262f3e">
+          <el-menu-item :route="{ path: '/' }" index="0" class="flex text-white">
+            <el-icon @click="LeftCollapsed = !LeftCollapsed">
+              <Fold v-if="!LeftCollapsed" />
+              <Expand v-else />
+            </el-icon>
           </el-menu-item>
           <div class="flex-grow" />
           <el-sub-menu index="2" class="rounded">
@@ -50,15 +53,15 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from "./states/auth.state";
-import Sidebar from "./components/Sidebar.vue";
+import { computed } from "@vue/reactivity";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Cache } from "./utils/cache";
-import { Layout } from './consts/index'
-import { computed } from "@vue/reactivity";
+import Sidebar from "./components/Sidebar.vue";
 import { TokenCacheKey } from "./consts/auth";
+import { Layout } from './consts/index';
 import { useStore } from "./states/app.state";
+import { useAuthStore } from "./states/auth.state";
+import { Cache } from "./utils/cache";
 
 const route = useRoute()
 const router = useRouter()
