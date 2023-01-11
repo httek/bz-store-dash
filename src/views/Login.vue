@@ -16,15 +16,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import type { FormInstance } from 'element-plus'
-import { validators } from '../validators'
-import { login } from "../apis/auth.api";
-import { Cache } from "../utils/cache";
-import { TokenCacheKey } from "../consts/auth";
+import type { FormInstance } from 'element-plus';
+import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from "vue-router";
-import { useAuthStore } from "../states/auth.state";
+import { login } from "../apis/auth.api";
 import { HTTP } from '../consts';
+import { TokenCacheKey } from "../consts/auth";
+import { useAuthStore } from "../states/auth.state";
+import { Cache } from "../utils/cache";
+import { validators } from '../validators';
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
@@ -35,8 +35,6 @@ const rules = reactive<any>({
   mobile: [{ validator: validators.mobile, trigger: 'blur' }],
   password: [{ validator: validators.password, trigger: 'blur' }],
 })
-
-const value = ref([])
 
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
@@ -51,8 +49,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
 
     Cache.set(TokenCacheKey, response.data.token, 3600 * 24)
-    authStore.profile = response.data
-    await router.push({ path: (route.query['redirect'] as string) || '/' })
+    router.replace({ path: (route.query['redirect'] as string) || '/' })
   })
 }
 

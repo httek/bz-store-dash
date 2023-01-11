@@ -1,21 +1,16 @@
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { getAuthProfile } from "../apis/auth.api";
-import { menus } from "../components/data/menus";
+import { getAuthSession } from "../apis/auth.api";
 import { TokenCacheKey } from "../consts/auth";
 import { useStore } from "../states/app.state";
 import { useAuthStore } from "../states/auth.state";
+import { addRoute } from '../utils';
 import { Cache } from "../utils/cache";
 
 NProgress.configure({ easing: 'ease' });
 
 const defaultRoutes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('../views/Dash.vue')
-  },
   {
     path: '/auth/login',
     name: 'Login',
@@ -23,42 +18,9 @@ const defaultRoutes: RouteRecordRaw[] = [
   }
 ]
 
-const authRoutes: RouteRecordRaw[] = [
-  {
-    path: '/brands', component: () => import(`../views/Brand.vue`), meta: {
-      title: '品牌', auth: true
-    }
-  },
-  {
-    path: '/categories', component: () => import(`../views/Category.vue`), meta: {
-      title: '分类', auth: true
-    }
-  },
-  {
-    path: '/stores', component: () => import((`../views/Store.vue`)), meta: {
-      title: '店铺', auth: true
-    }
-  },
-  {
-    path: '/deliveries', component: () => import('../views/Delivery.vue'), meta: {
-      title: '配送', auth: true
-    }
-  },
-  {
-    path: '/products', component: () => import('../views/Product.vue'), meta: {
-      title: '产品', auth: true
-    }
-  },
-  {
-    path: '/goods', component: () => import(`../views/Goods.vue`), meta: {
-      title: '商品', auth: true
-    }
-  }
-]
-
 const router = createRouter({
   history: createWebHistory(),
-  routes: [...defaultRoutes, ...authRoutes]
+  routes: [...defaultRoutes]
 })
 
 router.beforeEach(async (to, from) => {
@@ -83,12 +45,17 @@ router.beforeEach(async (to, from) => {
 
     // Fetch profile for page refreshed.
     if (token && !authStore.profile) {
-      authStore.profile = (await getAuthProfile()).data
+      const session = (await getAuthSession()).data
+      authStore.profile = session.profile
+      authStore.menus = session.menus
+      authStore.menus.map(item => addRoute(router, item))
+
+      return to.fullPath
     }
 
-    if (token && !authStore.menus.length) {
-      authStore.menus = menus
-    }
+    // if (token && !authStore.menus.length) {
+    //   authStore.menus = menus
+    // }
   }
 
   // Has login status, guarded to auth login.

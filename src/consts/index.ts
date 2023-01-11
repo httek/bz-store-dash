@@ -24,3 +24,11 @@ export namespace Admin {
     StoreOwner
   }
 }
+
+export namespace Menu {
+  export enum Type {
+    Directory = 0,
+    View,
+    Button
+  }
+}

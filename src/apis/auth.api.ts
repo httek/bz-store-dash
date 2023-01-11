@@ -1,9 +1,8 @@
-import http from "../utils/http";
-import { Admin } from "../models/admin";
 import { Response } from "../bags/response";
+import http from "../utils/http";
 
 export async function login(payload: { mobile: number, password: string }): Promise<Response> {
-  return await http.post('v1/auth/login', payload);
+  return await http.post('v2/auth/login', payload);
 }
 
 /**
@@ -11,6 +10,6 @@ export async function login(payload: { mobile: number, password: string }): Prom
  * 
  * @returns Promisse<Admin | null>
  */
-export async function getAuthProfile(): Promise<Response> {
-  return await http.get('v1/auth/profile');
+export async function getAuthSession(): Promise<Response> {
+  return await http.get('v2/auth/session');
 }
