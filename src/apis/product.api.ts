@@ -3,7 +3,7 @@ import { Product } from "../models/product";
 import http from "../utils/http";
 
 export namespace ProductAPIs {
-  const prefix = '/v1/system/products'
+  const prefix = '/v2/products'
 
   export function list(page: number = 1, size: number = 10, search?: Product): Promise<PaginateResponse> {
     return http.get(prefix, { params: { page, size, ...search } })

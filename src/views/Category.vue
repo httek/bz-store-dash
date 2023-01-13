@@ -38,12 +38,13 @@
     <template #empty>
       <el-empty description="暂无数据"></el-empty>
     </template>
+    <el-table-column align="center" width="65" fixed="left" prop="id" label="ID" />
     <el-table-column align="left" fixed="left" prop="name" label="名称" />
-    <el-table-column align="center" width="80" fixed="left" prop="type" label="类型">
-      <template #default="scope">
-        <el-tag disable-transitions>{{ types[scope.row.type] }}</el-tag>
-      </template>
-    </el-table-column>
+<!--    <el-table-column align="center" width="80" fixed="left" prop="type" label="类型">-->
+<!--      <template #default="scope">-->
+<!--        <el-tag disable-transitions>{{ types[scope.row.type] }}</el-tag>-->
+<!--      </template>-->
+<!--    </el-table-column>-->
     <el-table-column align="center" width="80" prop="cover" label="图标">
       <template #default="scope">
         <el-image v-if="scope.row.cover" class="cover rounded" :src="scope.row.cover" fit="contain" />

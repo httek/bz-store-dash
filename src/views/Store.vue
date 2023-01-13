@@ -67,13 +67,14 @@
     </template>
     <el-table-column align="center" type="selection" width="50" />
     <el-table-column align="center" fixed="left" min-width="120" prop="name" label="店铺名称" />
-    <el-table-column align="center" fixed="left" prop="name" width="100" label="店铺Logo">
+    <el-table-column align="center" fixed="left" min-width="120" prop="owner.mobile" label="店铺账号" />
+    <el-table-column align="center" prop="name" width="100" label="店铺Logo">
       <template #default="scope">
         <el-avatar class="cover" shape="square" :size="36" :src="scope.row.cover">{{ scope.row.name.substring(0, 2) }}
         </el-avatar>
       </template>
     </el-table-column>
-    <el-table-column align="center" fixed="left" width="100" prop="status" label="店铺状态">
+    <el-table-column align="center" width="100" prop="status" label="店铺状态">
       <template #default="scope">
         <el-tag :type="scope.row.status === 0 ? 'danger' : ''" disable-transitions>
           {{ statusTypes[scope.row.status] || '未知' }}

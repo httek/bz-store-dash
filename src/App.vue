@@ -39,6 +39,7 @@
           <p>近期服务维护，请妥善保存数据。</p>
         </el-alert> -->
         <RouterView />
+        <el-backtop :right="100" :bottom="100" />
       </el-main>
       <!-- <el-footer>Footer</el-footer> -->
     </el-container>

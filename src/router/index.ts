@@ -7,6 +7,7 @@ import { useStore } from "../states/app.state";
 import { useAuthStore } from "../states/auth.state";
 import { addRoute } from '../utils';
 import { Cache } from "../utils/cache";
+import NotFound from "../views/default/NotFound.vue";
 
 NProgress.configure({ easing: 'ease' });
 
@@ -15,12 +16,12 @@ const defaultRoutes: RouteRecordRaw[] = [
     path: '/auth/login',
     name: 'Login',
     component: () => import('../views/Login.vue')
-  }
+  },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes: [...defaultRoutes]
+  history: createWebHistory(), routes: [...defaultRoutes]
 })
 
 router.beforeEach(async (to, from) => {
@@ -32,7 +33,7 @@ router.beforeEach(async (to, from) => {
   if (!authStore.token) {
     const token: string = Cache.get(TokenCacheKey)
     if (!token && !to.path.startsWith('/auth/login')) {
-      return '/auth/login?redirect=' + from.path
+      return '/auth/login?redirect=' + to.path
     }
 
     // If token exists, guarded to auth login.
@@ -42,8 +43,6 @@ router.beforeEach(async (to, from) => {
 
     // Set token state
     authStore.token = token
-
-    // Fetch profile for page refreshed.
     if (token && !authStore.profile) {
       const session = (await getAuthSession()).data
       authStore.profile = session.profile
@@ -52,10 +51,6 @@ router.beforeEach(async (to, from) => {
 
       return to.fullPath
     }
-
-    // if (token && !authStore.menus.length) {
-    //   authStore.menus = menus
-    // }
   }
 
   // Has login status, guarded to auth login.

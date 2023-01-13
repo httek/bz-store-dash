@@ -6,7 +6,8 @@ export const addRoute = (router: Router, item: Menu) => {
   if (item.type == MenuConst.Type.View) {
     router.addRoute(item.slug || '', {
       path: item.path || '',
-      component: () => import(`../views/${item.component}`),
+      name: item.slug as string,
+      component: () => import(`../views/${item.component}.vue`),
       meta: { ...item.meta }
     })
   }

@@ -42,17 +42,18 @@
     </el-form>
   </el-page-header>
 
-  <el-table v-loading="loading" class="p-4" style="width: 100% !important;" :border="true" :data="items" row-key="id"
-    highlight-current-row stripe>
+  <el-table class="p-4" style="width: 100% !important;" :border="true" :data="items" row-key="id" highlight-current-row
+    stripe>
     <template #empty>
       <el-empty description="暂无数据"></el-empty>
     </template>
-    <el-table-column align="center" type="selection" width="50" />
-    <el-table-column align="center" prop="name" label="名称" />
-    <el-table-column align="center" prop="cover" label="Logo">
+
+    <el-table-column align="center" fixed="left" prop="id" width="80" label="ID" />
+    <el-table-column align="left" fixed="left" width="220" prop="cover" label="名称">
       <template #default="scope">
         <el-avatar class="cover" shape="square" :size="36" :src="scope.row.cover">{{ scope.row.name.substring(0, 2) }}
         </el-avatar>
+        {{ scope.row.name }}
       </template>
     </el-table-column>
     <el-table-column align="center" width="100" prop="status" label="状态">

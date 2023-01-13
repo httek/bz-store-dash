@@ -3,7 +3,7 @@ export interface Product {
   category_id?: number;
   uuid?: string;
   name?: string;
-  images: string[];
+  covers: string[];
   description?: string;
   status?: number;
   sequence?: number;
