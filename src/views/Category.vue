@@ -1,5 +1,5 @@
 <template>
-  <el-page-header class="hide-back p-4 bg-slate-50">
+  <el-page-header class="hide-back p-4">
     <template #content>
       <div class="flex items-center">
         <el-icon>
@@ -34,17 +34,17 @@
     </el-form>
   </el-page-header>
 
-  <el-table v-loading="loading" class="p-4" :border="true" stripe :data="items" row-key="id" highlight-current-row>
+  <el-table class="p-4" :border="true" stripe :data="items" row-key="id" highlight-current-row>
     <template #empty>
       <el-empty description="暂无数据"></el-empty>
     </template>
-    <el-table-column align="center" width="65" fixed="left" prop="id" label="ID" />
+    <!-- <el-table-column align="center" width="65" fixed="left" prop="id" label="ID" /> -->
     <el-table-column align="left" fixed="left" prop="name" label="名称" />
-<!--    <el-table-column align="center" width="80" fixed="left" prop="type" label="类型">-->
-<!--      <template #default="scope">-->
-<!--        <el-tag disable-transitions>{{ types[scope.row.type] }}</el-tag>-->
-<!--      </template>-->
-<!--    </el-table-column>-->
+    <!--    <el-table-column align="center" width="80" fixed="left" prop="type" label="类型">-->
+    <!--      <template #default="scope">-->
+    <!--        <el-tag disable-transitions>{{ types[scope.row.type] }}</el-tag>-->
+    <!--      </template>-->
+    <!--    </el-table-column>-->
     <el-table-column align="center" width="80" prop="cover" label="图标">
       <template #default="scope">
         <el-image v-if="scope.row.cover" class="cover rounded" :src="scope.row.cover" fit="contain" />
@@ -173,11 +173,11 @@ const onResetSearchForm = () => {
 let categoriesSelector = reactive<treeNode[]>([])
 function makeTreeNode(item: CategoryModel, disabled?: number): treeNode {
   let node: treeNode = { value: item.id, label: item.name, disabled: disabled == item.id, children: [] }
-  if (item.children?.length) {
-    for (const child of item.children) {
-      node.children?.push(makeTreeNode(child, disabled))
-    }
-  }
+  // if (item.children?.length) {
+  //   for (const child of item.children) {
+  //     node.children?.push(makeTreeNode(child, disabled))
+  //   }
+  // }
 
   return node
 }
@@ -195,7 +195,7 @@ const uploadedFiles = ref<UploadUserFile[]>([])
 const onFileUploaded = (response: Response) => opForm.cover = (response.data as string)
 const getCategorySelector = async (t: number = 1) => {
   categoriesSelector.splice(0)
-  const cateRes = (await CategoryAPIs.selector(t)).data
+  const cateRes = (await CategoryAPIs.select(t)).data
   for (const cate of cateRes) {
     categoriesSelector.push(makeTreeNode(cate, opForm.id))
   }

@@ -12,22 +12,23 @@ export interface Goods {
   store_id?: number
   brand_id?: number
   category_id?: number
-  delivery_template_id?: number
+  delivery_id?: number
   uuid?: string
   name?: string
+  badge?: string
   slogan?: string
   tips?: string
-  price?: number
+  sale_price?: number
   origin_price?: number
   tags?: string[]
-  images?: string[]
-  details?: string[]
+  covers?: string[]
+  detail?: string[]
   material?: string
   description?: string
   stock?: number
   sold?: number
   status?: number
-  delivery_free?: number
+  free_shipping?: number
   sequence?: number
   created_at?: string
   updated_at?: string

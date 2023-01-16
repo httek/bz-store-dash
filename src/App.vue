@@ -1,47 +1,31 @@
 <template>
-  <el-container v-if="authStore.token" class="h-screen min-h-3/4">
-    <el-aside :width="LeftWidth + 'px'" style="background-color: #1e222d">
-      <div class="flex w-full justify-center align-middle cursor-pointer" :style="{ height: Layout.LogoHeight + 'px' }">
-        <el-image
-          src="https://cloudcache.tencentcs.com/open_proj/proj_qcloud_v2/tc-console/tea-static-sdknav/src/styles/assets/tencent-cloud.svg"
-          fit="scale-down" />
-      </div>
-      <Sidebar :style="{ height: `calc(100vh - ${Layout.LogoHeight}px) !important`, backgroundColor: '#1e222d' }"
-        :active="MenuActive" :menus="authStore.menus" :is-collapse="LeftCollapsed" />
-    </el-aside>
-
-    <el-container>
-      <el-header class="px-0" :height="Layout.HeaderHeight + 'px'">
-        <el-menu class="header-menu" :style="{ height: Layout.HeaderHeight + 'px' }" mode="horizontal" :ellipsis="false"
-          text-color="white" background-color="#262f3e">
-          <el-menu-item :route="{ path: '/' }" index="0" class="flex text-white">
-            <el-icon @click="LeftCollapsed = !LeftCollapsed">
-              <Fold v-if="!LeftCollapsed" />
-              <Expand v-else />
-            </el-icon>
-          </el-menu-item>
-          <div class="flex-grow" />
-          <el-sub-menu index="2" class="rounded">
-            <template v-if="authStore.profile" #title>
-              <el-icon>
-                <User />
-              </el-icon>
-              {{ authStore.profile?.name }}
-            </template>
-            <el-menu-item index="2-1">账号信息</el-menu-item>
-            <el-menu-item index="2-1">消息中心</el-menu-item>
-            <el-menu-item @click="onLogout" index="2-2">退出登录</el-menu-item>
-          </el-sub-menu>
-        </el-menu>
-      </el-header>
-      <el-main class="p-0 overflow-x-hidden">
-        <!-- <el-alert type="warning" show-icon :closable="false">
-          <p>近期服务维护，请妥善保存数据。</p>
-        </el-alert> -->
-        <RouterView />
-        <el-backtop :right="100" :bottom="100" />
+  <el-container v-if="authStore.token" :class="['h-screen']">
+    <el-header class="header bg-slate-900 text-white overflow-hidden p-0"
+      :style="{ height: `${Layout.HeaderHeight}px` }">
+      <el-menu :style="{ height: `${Layout.HeaderHeight}px` }" class=" bg-slate-900 text-white border-0"
+        text-color="white" mode="horizontal" :ellipsis="false">
+        <el-menu-item index="0">
+          <el-image src="/vite.svg" /> <span class="ml-4 font-bold">{{ site }}</span>
+        </el-menu-item>
+        <div class="flex-grow" />
+        <el-menu-item index="1" v-if="authStore.profile">
+          <el-icon>
+            <User />
+          </el-icon> {{ authStore.profile?.name }}
+        </el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-container :style="{ height: `calc(100vh - ${Layout.HeaderHeight}px)` }">
+      <el-aside class="h-full bg-slate-900" :style="{ width: `${Layout.AsideMaxWidth}px` }">
+        <el-scrollbar>
+          <Sidebar :active="MenuActive" :menus="authStore.menus" :is-collapse="LeftCollapsed" />
+        </el-scrollbar>
+      </el-aside>
+      <el-main class="p-0">
+        <el-scrollbar>
+          <RouterView />
+        </el-scrollbar>
       </el-main>
-      <!-- <el-footer>Footer</el-footer> -->
     </el-container>
   </el-container>
   <!-- Auth -->
@@ -57,19 +41,17 @@
 import { computed } from "@vue/reactivity";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import Sidebar from "./components/Sidebar.vue";
 import { TokenCacheKey } from "./consts/auth";
 import { Layout } from './consts/index';
 import { useStore } from "./states/app.state";
 import { useAuthStore } from "./states/auth.state";
 import { Cache } from "./utils/cache";
 
+const site = import.meta.env.VITE_SITE_NAME
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-
 const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || false)
-const LeftWidth = computed<number>(() => LeftCollapsed.value ? Layout.AsideMinWidth : Layout.AsideMaxWidth)
 const MenuActive = computed<string>(() => route.path)
 
 const onLogout = async () => {

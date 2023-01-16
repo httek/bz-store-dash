@@ -8,6 +8,7 @@ import { useAuthStore } from "../states/auth.state";
 import { addRoute } from '../utils';
 import { Cache } from "../utils/cache";
 import NotFound from "../views/default/NotFound.vue";
+import { Menu } from './../models/menu';
 
 NProgress.configure({ easing: 'ease' });
 
@@ -23,6 +24,16 @@ const defaultRoutes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(), routes: [...defaultRoutes]
 })
+
+const makeMenu = (item: Menu) => {
+  if (item.type == 2) {
+    return null
+  }
+
+  const childrens = item.children?.map(makeMenu).filter(item => item != null)
+  item.children = childrens as Menu[]
+  return item;
+}
 
 router.beforeEach(async (to, from) => {
   NProgress.start()
@@ -46,7 +57,7 @@ router.beforeEach(async (to, from) => {
     if (token && !authStore.profile) {
       const session = (await getAuthSession()).data
       authStore.profile = session.profile
-      authStore.menus = session.menus
+      authStore.menus = session.menus.map(makeMenu)
       authStore.menus.map(item => addRoute(router, item))
 
       return to.fullPath

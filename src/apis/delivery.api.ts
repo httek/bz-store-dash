@@ -20,4 +20,8 @@ export namespace DeliveryAPIs {
 	export function update(id: number, item: Delivery): Promise<Response> {
 		return http.post(`${prefix}/${id}`, item)
 	}
+
+	export function select(name?: string): Promise<Response> {
+		return http.get(`${prefix}/select`, { params: { name } })
+	}
 }

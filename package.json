@@ -15,7 +15,6 @@
     "element-plus": "^2.2.27",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.28",
-    "vform3-builds": "^3.0.8",
     "vue": "^3.2.45",
     "vue-router": "4"
   },

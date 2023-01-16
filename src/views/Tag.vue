@@ -6,7 +6,7 @@
           <Guide />
         </el-icon>
         <el-breadcrumb class="mx-1" separator-icon="DArrowRight">
-          <el-breadcrumb-item><b>{{ route.meta.title || '品牌' }}</b></el-breadcrumb-item>
+          <el-breadcrumb-item><b>{{ route.meta.title || '标签' }}</b></el-breadcrumb-item>
           <el-breadcrumb-item>列表</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -25,14 +25,6 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="mb-2 w-full" label="状态">
-            <el-select v-model="searchForm.status" class="w-full">
-              <el-option :value="-1" label="全部" />
-              <el-option v-for="(name, index) of statusTypes" :value="index" :label="name" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
           <el-form-item class="w-full mb-2">
             <el-button :disabled="loading" @click="getItems()" type="primary">搜索</el-button>
             <el-button :disabled="loading" @click="Object.assign(searchForm, searchFormInit); getItems()">重置</el-button>
@@ -48,29 +40,11 @@
     </template>
 
     <el-table-column align="center" fixed="left" prop="id" width="80" label="ID" />
-    <el-table-column align="left" fixed="left" width="220" prop="cover" label="名称">
+    <el-table-column align="center" fixed="left" width="220" prop="name" label="名称" />
+    <el-table-column align="center" width="100" prop="cover" label="图标">
       <template #default="scope">
         <el-avatar class="cover" shape="square" :size="36" :src="scope.row.cover">{{ scope.row.name.substring(0, 2) }}
         </el-avatar>
-        {{ scope.row.name }}
-      </template>
-    </el-table-column>
-    <el-table-column align="center" width="100" prop="status" label="状态">
-      <template #default="scope">
-        <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{
-          scope.row.status ? '正常' : '禁用'
-        }}
-        </el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" prop="site" label="官网">
-      <template #default="scope">
-        <el-link v-if="scope.row.site" :href="scope.row.site" type="primary" target="_blank">
-          查看
-          <el-icon class="ml-1">
-            <Link />
-          </el-icon>
-        </el-link>
       </template>
     </el-table-column>
     <el-table-column align="center" prop="sequence" label="排序" />
@@ -120,11 +94,6 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item class="w-full" label="官网" prop="site">
-            <el-input v-model="opForm.site" clearable placeholder="官网" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item class="w-full" label="排序" prop="sequence">
             <el-input-number class="w-full" placeholder="排序" v-model="opForm.sequence" controls-position="right"
               :min="0" :step="1" />
@@ -136,12 +105,6 @@
             <el-radio-group v-model="opForm.status">
               <el-radio-button v-for="(name, index) of statusTypes" :label="index">{{ name }}</el-radio-button>
             </el-radio-group>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item class="w-full" label="简介">
-            <el-input v-model="opForm.description" maxlength="200" placeholder="品牌简介,可选" show-word-limit type="textarea"
-              :rows="3" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -160,7 +123,7 @@
 import { ElMessage, FormInstance, UploadUserFile } from 'element-plus';
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { BrandAPIs as APIs } from '../apis/brand.api';
+import { TagAPIs as APIs } from '../apis/tag.api';
 import { Response } from '../bags/response';
 import { HTTP, UploadApi } from '../consts';
 import { Brand } from '../models/brand';

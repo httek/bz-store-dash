@@ -15,6 +15,13 @@ export interface Menu {
   meta?: Meta | null
   type?: MenuConst.Type
   title?: string | null
+  status?: number | null
   component?: string | null
+  sequence?: number | null
   children?: Menu[] | null
+  parent_id?: number | null
+  checked?: boolean | null
 }
+
+
+export interface Permission extends Menu { }

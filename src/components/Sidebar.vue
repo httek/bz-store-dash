@@ -1,6 +1,6 @@
 <template>
-  <el-menu active-text-color="#fff" background-color="#1e222d" text-color="#7c878e" class="border-0"
-    :collapse="isCollapse" unique-opened :default-active="active" router>
+  <el-menu active-text-color="#fff" background-color="rgb(15 23 42 / var(--tw-bg-opacity))" text-color="#7c878e"
+    class="border-0 bg-slate-900 el-menu-vertical" :collapse="isCollapse" unique-opened :default-active="active" router>
     <template v-for="menu of menus">
       <el-menu-item v-if="!menu.children?.length" :index="menu.path">
         <el-icon v-if="menu.icon">
@@ -46,6 +46,5 @@
 
 <script setup lang="ts">
 import { Menu } from "../models/menu";
-
 defineProps<{ isCollapse: boolean, width?: number, active: string, menus: Array<Menu> }>()
 </script>

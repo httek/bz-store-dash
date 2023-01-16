@@ -1,5 +1,5 @@
 <template>
-  <el-page-header class="hide-back p-4 bg-slate-50">
+  <el-page-header class="hide-back p-4">
     <template #content>
       <div class="flex items-center">
         <el-icon>
@@ -61,7 +61,7 @@
     </el-form>
   </el-page-header>
 
-  <el-table v-loading="loading" class="p-4" :border="true" :data="items" row-key="id" highlight-current-row stripe>
+  <el-table class="p-4" :border="true" :data="items" row-key="id" highlight-current-row stripe>
     <template #empty>
       <el-empty description="暂无数据"></el-empty>
     </template>

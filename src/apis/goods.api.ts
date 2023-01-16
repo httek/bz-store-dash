@@ -20,4 +20,8 @@ export namespace GoodsAPIs {
   export function destroy(id: number): Promise<Response> {
     return http.delete(`${prefix}/${id}`)
   }
+
+  export function find(id: number): Promise<Response> {
+    return http.get(`${prefix}/${id}`)
+  }
 }

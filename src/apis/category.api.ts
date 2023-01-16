@@ -18,8 +18,8 @@ export namespace CategoryAPIs {
    * 
    * @returns Response
    */
-  export function selector(Type: number = 1): Promise<Response> {
-    return http.get('/v2/categories/select?type=' + Type)
+  export function select(type: number = 1): Promise<Response> {
+    return http.get('/v2/categories/select?type=' + type)
   }
 
 

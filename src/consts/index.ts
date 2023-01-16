@@ -4,7 +4,7 @@ const BackendApiHost = import.meta.env.VITE_BACKEND_API;
 export namespace Layout {
   export const AsideMaxWidth = 210
   export const AsideMinWidth = 64
-  export const HeaderHeight = 50
+  export const HeaderHeight = 60
   export const AsideCollapsedStatusCacheKey = 'aside-collapsed'
   export const LogoHeight = 68
 }
