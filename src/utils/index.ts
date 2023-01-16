@@ -3,7 +3,7 @@ import { Menu as MenuConst } from "../consts";
 import { Menu } from "../models/menu";
 
 export const addRoute = (router: Router, item: Menu) => {
-  if (item.type == MenuConst.Type.View) {
+  if (item.type == MenuConst.Type.View && item.component) {
     router.addRoute(item.slug || '', {
       path: item.path || '',
       name: item.slug as string,

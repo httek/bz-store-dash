@@ -33,7 +33,6 @@
       </el-row>
     </el-form>
   </el-page-header>
-
   <el-tree highlight-current class="p-4" :show-checkbox="false" :data="items" node-key="id" default-expand-all
     :expand-on-click-node="false" :props="{ class: () => 'py-1' }">
     <template #default="{ node, data }">
