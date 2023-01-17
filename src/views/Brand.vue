@@ -20,12 +20,12 @@
     <el-form :inline="true" :model="searchForm" class="mt-5">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item class="mb-2 w-full" label="名称">
+          <el-form-item class="w-full" label="名称">
             <el-input v-model="searchForm.name" placeholder="按名称搜索" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="mb-2 w-full" label="状态">
+          <el-form-item class="w-full" label="状态">
             <el-select v-model="searchForm.status" class="w-full">
               <el-option :value="-1" label="全部" />
               <el-option v-for="(name, index) of statusTypes" :value="index" :label="name" />
@@ -33,7 +33,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="w-full mb-2">
+          <el-form-item class="w-full">
             <el-button :disabled="loading" @click="getItems()" type="primary">搜索</el-button>
             <el-button :disabled="loading" @click="Object.assign(searchForm, searchFormInit); getItems()">重置</el-button>
           </el-form-item>
@@ -42,52 +42,54 @@
     </el-form>
   </el-page-header>
 
-  <el-table class="p-4" :border="true" :data="items" row-key="id" highlight-current-row stripe>
-    <template #empty>
-      <el-empty description="暂无数据"></el-empty>
-    </template>
+  <div class="mx-4">
+    <el-table :border="true" :data="items" row-key="id" highlight-current-row stripe>
+      <template #empty>
+        <el-empty description="暂无数据"></el-empty>
+      </template>
 
-    <el-table-column align="center" fixed="left" prop="id" width="80" label="ID" />
-    <el-table-column align="left" fixed="left" width="220" prop="cover" label="名称">
-      <template #default="scope">
-        <el-avatar class="cover" shape="square" :size="36" :src="scope.row.cover">{{ scope.row.name.substring(0, 2) }}
-        </el-avatar>
-        {{ scope.row.name }}
-      </template>
-    </el-table-column>
-    <el-table-column align="center" width="100" prop="status" label="状态">
-      <template #default="scope">
-        <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{
-          scope.row.status ? '正常' : '禁用'
-        }}
-        </el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" prop="site" label="官网">
-      <template #default="scope">
-        <el-link v-if="scope.row.site" :href="scope.row.site" type="primary" target="_blank">
-          查看
-          <el-icon class="ml-1">
-            <Link />
-          </el-icon>
-        </el-link>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" prop="sequence" label="排序" />
-    <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
-    <el-table-column align="center" prop="updated_at" min-width="180" label="更新时间" />
-    <el-table-column align="center" fixed="right" label="操作" width="120">
-      <template #default="scope">
-        <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
-        <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
-          icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
-          <template #reference>
-            <el-button link class="hover:text-red-500">删除</el-button>
-          </template>
-        </el-popconfirm>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column align="center" fixed="left" prop="id" width="80" label="ID" />
+      <el-table-column align="left" fixed="left" width="220" prop="cover" label="名称">
+        <template #default="scope">
+          <el-avatar class="cover" shape="square" :size="36" :src="scope.row.cover">{{ scope.row.name.substring(0, 2) }}
+          </el-avatar>
+          {{ scope.row.name }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="100" prop="status" label="状态">
+        <template #default="scope">
+          <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{
+            scope.row.status ? '正常' : '禁用'
+          }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="site" label="官网">
+        <template #default="scope">
+          <el-link v-if="scope.row.site" :href="scope.row.site" type="primary" target="_blank">
+            查看
+            <el-icon class="ml-1">
+              <Link />
+            </el-icon>
+          </el-link>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="sequence" label="排序" />
+      <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
+      <el-table-column align="center" prop="updated_at" min-width="180" label="更新时间" />
+      <el-table-column align="center" fixed="right" label="操作" width="120">
+        <template #default="scope">
+          <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
+          <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
+            icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
+            <template #reference>
+              <el-button link class="hover:text-red-500">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
   <!-- Pagination -->
   <div class="flex justify-end w-full p-4" v-if="items.length">

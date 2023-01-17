@@ -74,13 +74,18 @@
       </el-row>
     </el-form>
   </el-page-header>
-  <div class="p-4">
+
+  <div class="mx-4">
     <el-table border :data="items" row-key="id" stripe>
       <template #empty>
         <el-empty description="暂无数据"></el-empty>
       </template>
       <el-table-column align="center" fixed="left" prop="id" width="90" label="ID" />
-      <el-table-column align="center" fixed="left" prop="name" width="200" label="名称" />
+      <el-table-column align="center" fixed="left" prop="name" width="200" label="名称">
+        <template #default="scope">
+          <el-link @click="onDetailVisible(scope.row.id)">{{ scope.row.name }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="images" width="80" label="图片">
         <template #default="scope">
           <el-popover placement="right">

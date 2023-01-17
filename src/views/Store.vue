@@ -47,7 +47,7 @@
         </el-col>
         <el-col :span="6">
           <el-form-item class="w-full" label="创建时间">
-            <el-date-picker style="width: 240px" v-model="searchForm.created_at" value-format="YYYY-MM-DD"
+            <el-date-picker style="width: 240px" v-model="(searchForm.created_at as any)" value-format="YYYY-MM-DD"
               type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" />
           </el-form-item>
         </el-col>
@@ -61,51 +61,53 @@
     </el-form>
   </el-page-header>
 
-  <el-table class="p-4" :border="true" :data="items" row-key="id" highlight-current-row stripe>
-    <template #empty>
-      <el-empty description="暂无数据"></el-empty>
-    </template>
-    <el-table-column align="center" type="selection" width="50" />
-    <el-table-column align="center" fixed="left" min-width="120" prop="name" label="店铺名称" />
-    <el-table-column align="center" fixed="left" min-width="120" prop="owner.mobile" label="店铺账号" />
-    <el-table-column align="center" prop="name" width="100" label="店铺Logo">
-      <template #default="scope">
-        <el-avatar class="cover" shape="square" :size="36" :src="scope.row.cover">{{ scope.row.name.substring(0, 2) }}
-        </el-avatar>
+  <div class="mx-4">
+    <el-table :border="true" :data="items" row-key="id" highlight-current-row stripe>
+      <template #empty>
+        <el-empty description="暂无数据"></el-empty>
       </template>
-    </el-table-column>
-    <el-table-column align="center" width="100" prop="status" label="店铺状态">
-      <template #default="scope">
-        <el-tag :type="scope.row.status === 0 ? 'danger' : ''" disable-transitions>
-          {{ statusTypes[scope.row.status] || '未知' }}
-        </el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" width="100" prop="cash_type" label="提现方式">
-      <template #default="scope">
-        <el-tag :type="scope.row.cash === 1 ? 'success' : ''" disable-transitions>{{
-          scope.row.cash ? '对私' : '对共'
-        }}
-        </el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" prop="deposit" min-width="100" label="保证金(¥)" />
-    <el-table-column align="center" prop="phone" width="130" label="电话" />
-    <el-table-column align="center" width="100" class="flex justify-center" prop="sequence" label="排序" />
-    <el-table-column align="center" prop="expired_at" min-width="180" label="服务截止" />
-    <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
-    <el-table-column align="center" fixed="right" label="操作" width="120">
-      <template #default="scope">
-        <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
-        <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
-          icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
-          <template #reference>
-            <el-button link class="hover:text-red-500">删除</el-button>
-          </template>
-        </el-popconfirm>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column align="center" type="selection" width="50" />
+      <el-table-column align="center" fixed="left" min-width="120" prop="name" label="店铺名称" />
+      <el-table-column align="center" fixed="left" min-width="120" prop="owner.mobile" label="店铺账号" />
+      <el-table-column align="center" prop="name" width="100" label="店铺Logo">
+        <template #default="scope">
+          <el-avatar class="cover" shape="square" :size="36" :src="scope.row.cover">{{ scope.row.name.substring(0, 2) }}
+          </el-avatar>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="100" prop="status" label="店铺状态">
+        <template #default="scope">
+          <el-tag :type="scope.row.status === 0 ? 'danger' : ''" disable-transitions>
+            {{ statusTypes[scope.row.status] || '未知' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="100" prop="cash_type" label="提现方式">
+        <template #default="scope">
+          <el-tag :type="scope.row.cash === 1 ? 'success' : ''" disable-transitions>{{
+            scope.row.cash ? '对私' : '对共'
+          }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="deposit" min-width="100" label="保证金(¥)" />
+      <el-table-column align="center" prop="phone" width="130" label="电话" />
+      <el-table-column align="center" width="100" class="flex justify-center" prop="sequence" label="排序" />
+      <el-table-column align="center" prop="expired_at" min-width="180" label="服务截止" />
+      <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
+      <el-table-column align="center" fixed="right" label="操作" width="120">
+        <template #default="scope">
+          <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
+          <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
+            icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
+            <template #reference>
+              <el-button link class="hover:text-red-500">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
   <div class="flex justify-end w-full p-4" v-if="items.length">
     <el-pagination @current-change="(page) => { paginate.page = page; getLists() }" class="justify-end"
@@ -164,8 +166,8 @@
         </el-col>
         <el-col :span="12">
           <el-form-item class="w-full" label="服务截止" prop="expired_at">
-            <el-date-picker clearable lang="zhCn" value-format="YYYY-MM-DD HH:mm:ss" v-model="opForm.expired_at"
-              type="datetime" placeholder="服务截止日前" />
+            <el-date-picker clearable lang="zhCn" value-format="YYYY-MM-DD HH:mm:ss"
+              v-model="(opForm.expired_at as string)" type="datetime" placeholder="服务截止日前" />
           </el-form-item>
         </el-col>
         <el-col :span="12">

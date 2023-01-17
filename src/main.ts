@@ -2,8 +2,11 @@ import ElementPlus from 'element-plus';
 import { createApp } from 'vue';
 import App from './App.vue';
 
-import 'element-plus/dist/index.css';
 import './style.css';
+
+import 'element-plus/dist/index.css';
+
+
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import router from "./router";

@@ -1,12 +1,11 @@
 <template>
   <div class="h-full flex justify-center">
-    <el-result class="mb-72" title="403" sub-title="您无权查看此网页">
+    <el-result class="mb-72 pt-36" title="404" sub-title="页面暂时无法访问">
       <template #icon>
-        <el-image src="../../assets/vue.svg" />
+        <el-image fit="contain" style="width: 360px;"
+          src="https://fs.assets.icraft.ltd/illustrations/undraw_city_life_gnpr.svg" />
       </template>
-      <template #extra>
-        <el-button link @click="goHome()" type="primary">返回首页</el-button>
-      </template>
+      dd
     </el-result>
   </div>
 </template>

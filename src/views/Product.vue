@@ -20,12 +20,12 @@
     <el-form :inline="true" :model="searchForm" class="mt-5">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item class="mb-2" label="名称">
+          <el-form-item label="名称">
             <el-input v-model="searchForm.name" placeholder="按名称搜索" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="mb-2" label="状态">
+          <el-form-item label="状态">
             <el-select v-model="searchForm.status">
               <el-option :value="-1" label="全部" />
               <el-option v-for="(name, index) of statusTypes" :value="index" :label="name" />
@@ -33,7 +33,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="mb-2">
+          <el-form-item>
             <el-button @click="getItems()" type="primary">搜索</el-button>
             <el-button @click="Object.assign(searchForm, searchFormInit); getItems()">重置</el-button>
           </el-form-item>
@@ -42,60 +42,62 @@
     </el-form>
   </el-page-header>
 
-  <el-table class="p-4" :border="true" :data="items" row-key="id" highlight-current-row stripe>
-    <template #empty>
-      <el-empty description="暂无数据"></el-empty>
-    </template>
-    <el-table-column align="center" fixed="left" width="60" prop="id" label="ID" />
-    <el-table-column align="center" fixed="left" min-width="120" prop="name" label="名称" />
-    <el-table-column align="center" prop="covers" width="65" label="图片">
-      <template #default="scope">
-        <el-avatar v-if="scope.row.covers?.length" class="cover" shape="square" :src="scope.row.covers[0]">{{
-          scope.row.name.substring(0, 2)
-        }}
-        </el-avatar>
+  <div class="mx-4">
+    <el-table :border="true" :data="items" row-key="id" highlight-current-row stripe>
+      <template #empty>
+        <el-empty description="暂无数据"></el-empty>
       </template>
-    </el-table-column>
-    <el-table-column align="center" prop="category.name" label="分类" />
-    <el-table-column align="center" width="70" prop="status" label="状态">
-      <template #default="scope">
-        <el-tag :type='(statusTagColor[scope.row.status] as any)' disable-transitions>{{
-          statusTypes[scope.row.status] ||
-            '-'
-        }}
-        </el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" prop="sequence" label="排序" />
-    <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
-    <el-table-column align="center" prop="updated_at" min-width="180" label="更新时间" />
-    <el-table-column align="center" fixed="right" label="操作" width="160">
-      <template #default="scope">
-        <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
-        <el-divider direction="vertical" />
-        <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
-          icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
-          <template #reference>
-            <el-button link class="hover:text-red-500">删除</el-button>
-          </template>
-        </el-popconfirm>
-        <el-divider direction="vertical" />
-        <el-dropdown>
-          <el-button link>
-            <el-icon class="pt-1 font-bold">
-              <Operation />
-            </el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="Update(scope.row.id, { status: 2 })" icon="Checked">上架</el-dropdown-item>
-              <el-dropdown-item @click="Update(scope.row.id, { status: 1 })" icon="Failed">下架</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column align="center" fixed="left" width="60" prop="id" label="ID" />
+      <el-table-column align="center" fixed="left" min-width="120" prop="name" label="名称" />
+      <el-table-column align="center" prop="covers" width="65" label="图片">
+        <template #default="scope">
+          <el-avatar v-if="scope.row.covers?.length" class="cover" shape="square" :src="scope.row.covers[0]">{{
+            scope.row.name.substring(0, 2)
+          }}
+          </el-avatar>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="category.name" label="分类" />
+      <el-table-column align="center" width="70" prop="status" label="状态">
+        <template #default="scope">
+          <el-tag :type='(statusTagColor[scope.row.status] as any)' disable-transitions>{{
+            statusTypes[scope.row.status] ||
+              '-'
+          }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="sequence" label="排序" />
+      <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
+      <el-table-column align="center" prop="updated_at" min-width="180" label="更新时间" />
+      <el-table-column align="center" fixed="right" label="操作" width="160">
+        <template #default="scope">
+          <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
+          <el-divider direction="vertical" />
+          <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
+            icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
+            <template #reference>
+              <el-button link class="hover:text-red-500">删除</el-button>
+            </template>
+          </el-popconfirm>
+          <el-divider direction="vertical" />
+          <el-dropdown>
+            <el-button link>
+              <el-icon class="pt-1 font-bold">
+                <Operation />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="Update(scope.row.id, { status: 2 })" icon="Checked">上架</el-dropdown-item>
+                <el-dropdown-item @click="Update(scope.row.id, { status: 1 })" icon="Failed">下架</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
   <div class="flex justify-end w-full p-4" v-if="items.length">
     <el-pagination @current-change="(page) => { paginate.page = page; getItems() }" class="justify-end"

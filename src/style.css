@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --el-menu-item-height: 52px !important;
+}
+
 .cover {
-    height: 36px;
-    width: 36px;
+    height: 32px;
+    width: 32px;
 }
 
 .hide-upload-btn .el-upload {
@@ -24,7 +28,6 @@
     width: 100%;
 }
 
-.header-menu .is-active {
-    color: white !important;
-    border: 0 !important;
+.bg-primary {
+    background-color: #222d32 !important;
 }

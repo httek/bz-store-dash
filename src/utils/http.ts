@@ -8,6 +8,7 @@ const http = axios.create()
 http.interceptors.request.use(config => {
   const token = Cache.get(TokenCacheKey)
   if (token) {
+    /** @ts-ignore */
     config.headers = { Authorization: 'Bearer ' + token, ...config.headers }
   }
 

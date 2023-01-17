@@ -20,12 +20,12 @@
     <el-form :inline="true" :model="searchForm" class="mt-5">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item class="mb-2 w-full" label="顶级分类">
+          <el-form-item class="w-full" label="顶级分类">
             <el-input v-model="searchForm.name" placeholder="按顶级分类名称搜索" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="w-full mb-2">
+          <el-form-item class="w-full">
             <el-button :disabled="loading" @click="getItems()" type="primary">搜索</el-button>
             <el-button :disabled="loading" @click="Object.assign(searchForm, searchFormInit); getItems()">重置</el-button>
           </el-form-item>
@@ -33,34 +33,38 @@
       </el-row>
     </el-form>
   </el-page-header>
-  <el-tree highlight-current class="p-4" :show-checkbox="false" :data="items" node-key="id" default-expand-all
-    :expand-on-click-node="false" :props="{ class: () => 'py-1' }">
-    <template #default="{ node, data }">
-      <el-row :gutter="20" class="w-full p-2">
-        <el-col :span="16" class="w-full">
-          <el-icon v-if="data.icon" class="mr-1">
-            <component :is="data.icon"></component>
-          </el-icon> {{ data.title }}
-          <small>[{{ data.type == 0 ? '目录' : data.type == 1 ? '菜单' : '操作' }}]</small>
-          <el-link class="ml-4" v-if="data.type == 1" :href="data.path" target="_blank">
-            <small>{{
-              data.path
-            }}</small>
-          </el-link>
-        </el-col>
-        <el-col :span="8" class=" text-right">
-          <el-button link @click="onOp(data)" class="hover:text-blue-500">编辑</el-button>
-          <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
-            icon-color="#626AEF" width="200px" @confirm="onDelete(data.id)"
-            :title="data.children ? '确定要删除吗(删除)？' : '确定要是删除吗?'">
-            <template #reference>
-              <el-button link class="hover:text-red-500">删除</el-button>
-            </template>
-          </el-popconfirm>
-        </el-col>
-      </el-row>
-    </template>
-  </el-tree>
+
+  <div class="mx-4">
+    <el-empty v-if="!items.length" class=" mt-24" />
+    <el-tree v-if="items.length" highlight-current :show-checkbox="false" class="p-3 mb-4" :data="items" node-key="id"
+      default-expand-all :expand-on-click-node="false" :props="{ class: () => 'py-1' }">
+      <template #default="{ node, data }">
+        <el-row :gutter="20" class="w-full p-2">
+          <el-col :span="16" class="w-full">
+            <el-icon v-if="data.icon" class="mr-1">
+              <component :is="data.icon"></component>
+            </el-icon> {{ data.title }}
+            <small>[{{ data.type == 0 ? '目录' : data.type == 1 ? '菜单' : '操作' }}]</small>
+            <el-link class="ml-4" v-if="data.type == 1" :href="data.path" target="_blank">
+              <small>{{
+                data.path
+              }}</small>
+            </el-link>
+          </el-col>
+          <el-col :span="8" class=" text-right">
+            <el-button link @click="onOp(data)" class="hover:text-blue-500">编辑</el-button>
+            <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
+              icon-color="#626AEF" width="200px" @confirm="onDelete(data.id)"
+              :title="data.children ? '确定要删除吗(删除)？' : '确定要是删除吗?'">
+              <template #reference>
+                <el-button link class="hover:text-red-500">删除</el-button>
+              </template>
+            </el-popconfirm>
+          </el-col>
+        </el-row>
+      </template>
+    </el-tree>
+  </div>
 
   <!-- Add -->
   <el-dialog width="685px" v-model="opPanelVisible" :title="opForm.id as number > 0 ? '编辑' : '添加'" align-center

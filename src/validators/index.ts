@@ -8,9 +8,13 @@ export namespace validators {
   }
 
   export const mobile = async (rule: any, value: string, callback: any) => {
+    if (!value) {
+      return callback(new Error('请输入账号'))
+    }
+
     const reg = /^[1][3,4,5,7,8][0-9]{9}$/;
     if (!reg.test(value.toString())) {
-      return callback(new Error('输入正确的11位手机号码'))
+      return callback(new Error('账号应为正确的13位手机号码'))
     }
 
     callback()

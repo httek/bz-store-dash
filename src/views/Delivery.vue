@@ -20,7 +20,7 @@
     <el-form :inline="true" :model="searchForm" class="mt-5">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-form-item class="mb-2 w-full px-4" label="类型">
+          <el-form-item class="w-full" label="类型">
             <el-select class="w-full" v-model="searchForm.type" placeholder="请选择类型">
               <el-option label="全部" :value="-1" />
               <el-option v-for="(name, index) of types" :label="name" :value="index" />
@@ -28,12 +28,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="mb-2 w-full px-4" label="名称">
+          <el-form-item class="w-full" label="名称">
             <el-input v-model="searchForm.name" placeholder="按名称搜索" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item class="w-full mb-2">
+          <el-form-item class="w-full ">
             <el-button :disabled="loading" @click="getItems()" type="primary">搜索</el-button>
             <el-button :disabled="loading" @click="onResetFilter()">重置</el-button>
           </el-form-item>
@@ -42,53 +42,55 @@
     </el-form>
   </el-page-header>
 
-  <el-table class="p-4" :border="true" stripe :data="items" row-key="id" highlight-current-row>
-    <template #empty>
-      <el-empty description="暂无数据"></el-empty>
-    </template>
-    <el-table-column align="center" fixed="left" width="80" prop="id" label="ID" />
-    <el-table-column align="center" fixed="left" prop="name" label="名称">
-      <template #default="scope">
-        <el-tooltip :disabled="!scope.row.tips" class="box-item" effect="dark" :content="scope.row.tips"
-          placement="right">
-          {{ scope.row.name }}
-        </el-tooltip>
+  <div class="mx-4">
+    <el-table :border="true" stripe :data="items" row-key="id" highlight-current-row>
+      <template #empty>
+        <el-empty description="暂无数据"></el-empty>
       </template>
-    </el-table-column>
-    <el-table-column align="center" prop="type" label="类型">
-      <template #default="scope">
-        <el-tag disable-transitions>{{ types[scope.row.type] || '-' }}</el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" width="80" prop="cost" label="费用">
-      <template #default="scope">
-        ¥ {{ scope.row.cost }}
-      </template>
-    </el-table-column>
-    <el-table-column align="center" width="80" prop="status" label="状态">
-      <template #default="scope">
-        <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{
-          scope.row.status ? '正常' : '禁用'
-        }}
-        </el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column align="center" width="100" class="flex justify-center" prop="sequence" label="排序" />
-    <el-table-column align="center" prop="created_at" label="创建时间" />
-    <el-table-column align="center" prop="created_at" label="更新时间" />
-    <el-table-column align="center" fixed="right" label="操作" width="120">
-      <template #default="scope">
-        <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
-        <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
-          icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)"
-          :title="scope.row.level <= 2 ? '确定要删除吗(所属子分类也会被删除)?' : '确定要是删除吗?'">
-          <template #reference>
-            <el-button link class="hover:text-red-500">删除</el-button>
-          </template>
-        </el-popconfirm>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column align="center" fixed="left" width="80" prop="id" label="ID" />
+      <el-table-column align="center" fixed="left" prop="name" label="名称">
+        <template #default="scope">
+          <el-tooltip :disabled="!scope.row.tips" class="box-item" effect="dark" :content="scope.row.tips"
+            placement="right">
+            {{ scope.row.name }}
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="type" label="类型">
+        <template #default="scope">
+          <el-tag disable-transitions>{{ types[scope.row.type] || '-' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="80" prop="cost" label="费用">
+        <template #default="scope">
+          ¥ {{ scope.row.cost }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="80" prop="status" label="状态">
+        <template #default="scope">
+          <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{
+            scope.row.status ? '正常' : '禁用'
+          }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="100" class="flex justify-center" prop="sequence" label="排序" />
+      <el-table-column align="center" prop="created_at" label="创建时间" />
+      <el-table-column align="center" prop="created_at" label="更新时间" />
+      <el-table-column align="center" fixed="right" label="操作" width="120">
+        <template #default="scope">
+          <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
+          <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
+            icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)"
+            :title="scope.row.level <= 2 ? '确定要删除吗(所属子分类也会被删除)?' : '确定要是删除吗?'">
+            <template #reference>
+              <el-button link class="hover:text-red-500">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
   <!-- Pagination -->
   <div class="flex justify-end w-full p-4" v-if="items.length">
