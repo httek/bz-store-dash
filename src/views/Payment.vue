@@ -1,0 +1,235 @@
+<template>
+  <el-page-header class="hide-back p-4">
+    <template #content>
+      <div class="flex items-center">
+        <el-icon>
+          <Guide />
+        </el-icon>
+        <el-breadcrumb class="mx-1" separator-icon="DArrowRight">
+          <el-breadcrumb-item><b>{{ route.meta.title || '支付方式' }}</b></el-breadcrumb-item>
+          <el-breadcrumb-item>列表</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
+    </template>
+    <template #extra>
+      <div class="flex items-center">
+        <el-button type="primary" @click="onOp()" icon="Plus" circle />
+      </div>
+    </template>
+
+    <el-form :inline="true" :model="searchForm" class="mt-5">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-form-item class="w-full" label="名称">
+            <el-input v-model="searchForm.merchant_name" placeholder="按商户名称搜索" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item class="w-full ">
+            <el-button :disabled="loading" @click="getItems()" type="primary">搜索</el-button>
+            <el-button :disabled="loading" @click="onResetFilter()">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+  </el-page-header>
+
+  <div class="mx-4">
+    <el-table :border="true" stripe :data="items" row-key="id" highlight-current-row>
+      <template #empty>
+        <el-empty description="暂无数据"></el-empty>
+      </template>
+      <el-table-column align="center" fixed="left" width="80" prop="id" label="ID" />
+      <el-table-column align="center" fixed="left" prop="name" label="名称" />
+      <el-table-column align="center" fixed="left" prop="merchant_name" label="商户名称" />
+      <el-table-column align="center" fixed="left" prop="merchant_id" label="商户ID" />
+      <el-table-column align="center" width="80" prop="status" label="状态">
+        <template #default="scope">
+          <el-tag :type="scope.row.status === 1 ? '' : 'danger'" disable-transitions>{{
+            scope.row.status ? '正常' : '禁用'
+          }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="expired_at" width="170" label="证书到期" />
+      <el-table-column align="center" prop="created_at" width="170" label="创建时间" />
+      <el-table-column align="center" prop="created_at" width="170" label="更新时间" />
+      <el-table-column align="center" fixed="right" label="操作" width="120">
+        <template #default="scope">
+          <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
+          <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
+            icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)"
+            :title="scope.row.level <= 2 ? '确定要删除吗(所属子分类也会被删除)?' : '确定要是删除吗?'">
+            <template #reference>
+              <el-button link class="hover:text-red-500">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-end w-full p-4" v-if="items.length">
+    <el-pagination @current-change="(page) => { paginate.page = page; getItems() }" class="justify-end"
+      v-model:page-size="paginate.size" @size-change="(size) => getItems()" :page-sizes="[10, 20, 30, 50, 100]"
+      background layout="total, sizes, prev, pager, next" :total="paginate.total" />
+  </div>
+
+  <!-- Add -->
+  <el-drawer size="50%" v-model="opVisible" :title="(opFormModel.id as number) > 0 ? '编辑' : '添加'" align-center
+    class="px-5" destroy-on-close :show-close="false" :close-on-press-escape="false" :close-on-click-modal="false">
+    <el-form status-icon ref="opFormRef" :rules="opFormRules" :model="opFormModel" label-width="110px" class="w-full">
+      <el-form-item label="名称" required prop="name">
+        <el-input v-model="opFormModel.name" clearable placeholder="请输入名称" />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-radio-group v-model="opFormModel.status">
+          <el-radio :label="1">正常</el-radio>
+          <el-radio :label="0">禁用</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="商户名称" required>
+        <el-input v-model="opFormModel.merchant_name" placeholder="商户名称" maxlength="80" show-word-limit :rows="3" />
+      </el-form-item>
+      <el-form-item label="商户ID" required>
+        <el-input v-model="opFormModel.merchant_id" placeholder="商户ID" maxlength="80" show-word-limit :rows="3" />
+      </el-form-item>
+      <el-form-item label="Secret">
+        <el-input v-model="opFormModel.secret" placeholder="API Key" maxlength="200" type="textarea" show-word-limit
+          :rows="2" />
+      </el-form-item>
+      <el-form-item label="商户证书序号" required>
+        <el-input v-model="opFormModel.serial" placeholder="商户支付证书私钥" maxlength="80" show-word-limit :rows="3" />
+      </el-form-item>
+
+      <el-form-item label="商户私钥" required>
+        <el-input v-model="opFormModel.private_key" placeholder="商户支付证书私钥" show-word-limit type="textarea" :rows="3" />
+      </el-form-item>
+      <el-form-item label="商户公钥" required>
+        <el-input v-model="opFormModel.public_key" placeholder="商户支付证书公钥" show-word-limit type="textarea" :rows="3" />
+      </el-form-item>
+      <el-form-item label="商户证书到期" required prop="expired_at">
+        <el-date-picker class="w-full" v-model="opFormModel.expired_at" clearable type="datetime"
+          value-format="YYYY-MM-DD HH:mm:ss" placeholder="商户证书到期日期" />
+      </el-form-item>
+
+      <el-form-item label="平台证书序号" required>
+        <el-input v-model="opFormModel.platform_key_serial" placeholder="商户支付证书私钥" show-word-limit maxlength="80"
+          :rows="3" />
+      </el-form-item>
+      <el-form-item label="平台公钥" required>
+        <el-input v-model="opFormModel.platform_public_key" placeholder="支付平台证书公钥" show-word-limit type="textarea"
+          :rows="3" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="onOpCancel()">取消</el-button>
+        <el-button :loading="opFormButtonLoading" type="primary" @keydown.enter="onOpSubmit(opFormRef)"
+          @click="onOpSubmit(opFormRef)">{{ opFormModel.id ? '保存' : '添加' }}</el-button>
+      </span>
+    </template>
+  </el-drawer>
+  <!-- End Add -->
+</template>
+
+<script setup lang="ts">
+import { ElNotification, FormInstance } from "element-plus";
+import { onMounted, reactive, ref } from "vue";
+import { useRoute } from "vue-router";
+import { PaymentAPIs } from "../apis/payment.api";
+import { Response } from "../bags/response";
+import { HTTP } from "../consts";
+import { Payment } from "../models/payment";
+
+onMounted(() => getItems())
+
+const route = useRoute()
+const types = ['快递配送', '商家配送', '其他方式']
+const items = ref<Payment[]>([]);
+const paginate = reactive({ page: 1, size: 10, total: 0 })
+const loading = ref(false)
+const getItems = async () => {
+  loading.value = true
+  const pRes = await PaymentAPIs.list(paginate.page, paginate.size, searchForm)
+  items.value = pRes.data.data
+  paginate.page = pRes.data.page
+  paginate.size = pRes.data.size
+  paginate.total = pRes.data.total
+  loading.value = false
+}
+
+const filterInit = { merchant_name: '', status: -1 }
+const searchForm = reactive({ ...filterInit })
+const onResetFilter = () => {
+  Object.assign(searchForm, filterInit)
+  getItems()
+}
+
+const validateName = (rule: any, value: string, callback: any) => {
+  if (value.length < 2) {
+    return callback(new Error('名称至少2个字符'))
+  }
+
+  callback()
+}
+
+const opVisible = ref<boolean>(false)
+const opFormRef = ref<FormInstance>()
+const opFormButtonLoading = ref(false)
+const opFormModelInit: Payment = {
+  name: '', merchant_name: '', merchant_id: '', status: 1, expired_at: '',
+  serial: '', secret: '', id: 0, platform_key_serial: '', platform_public_key: '',
+  public_key: '', private_key: ''
+}
+const opFormModel = reactive({ ...opFormModelInit })
+const opFormRules = reactive({
+  name: [{ validator: validateName, trigger: 'blur' }]
+})
+const onOp = (row?: Payment) => {
+  if (row) {
+    Object.assign(opFormModel, row)
+  }
+
+  opVisible.value = true
+}
+const onOpCancel = () => {
+  Object.assign(opFormModel, opFormModelInit)
+  opVisible.value = false
+}
+const onOpSubmit = (form: FormInstance | undefined) => {
+  if (!form) return
+
+  form.validate(async (valid) => {
+    if (!valid) {
+      return
+    }
+
+    opFormButtonLoading.value = true
+    let res: Response
+    if ((opFormModel.id as number) > 0) {
+      res = await PaymentAPIs.update(opFormModel.id as number, opFormModel as Payment)
+    } else {
+      res = await PaymentAPIs.store(opFormModel as Payment);
+    }
+
+    opFormButtonLoading.value = false
+    if (res.code != HTTP.OK) {
+      return ElNotification.success({ title: res.msg })
+    }
+
+    ElNotification.success({ title: '操作成功' })
+    onOpCancel()
+    getItems()
+  })
+}
+
+const onDelete = async (id: number) => {
+  const res = await PaymentAPIs.destroy(id)
+  if (res.code == HTTP.OK) {
+    getItems()
+    ElNotification.success({ title: '删除成功' })
+  }
+}
+</script>

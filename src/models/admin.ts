@@ -1,11 +1,16 @@
-import {Role} from "./role";
+import { Role } from "./role";
 
 export interface Admin {
-[x: string]: any;
-  id: number
-  mobile: string
-  name: string
+  id?: number
+  type?: number
+  mobile?: string
+  name?: string
+  password?: string
   avatar?: string | null
+  role_id?: number
   role?: Role | null
-  token?: string | null
+  token?: string | null,
+  status?: number,
+  created_at?: string
+  updated_at?: string
 }

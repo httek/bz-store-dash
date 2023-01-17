@@ -54,10 +54,9 @@
           <el-col :span="8" class=" text-right">
             <el-button link @click="onOp(data)" class="hover:text-blue-500">编辑</el-button>
             <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
-              icon-color="#626AEF" width="200px" @confirm="onDelete(data.id)"
-              :title="data.children ? '确定要删除吗(删除)？' : '确定要是删除吗?'">
+              icon-color="#626AEF" width="200px" @confirm="onDelete(data.id)" title="确定要是删除吗?">
               <template #reference>
-                <el-button link class="hover:text-red-500">删除</el-button>
+                <el-button v-if="!data.children.length" link class="hover:text-red-500">删除</el-button>
               </template>
             </el-popconfirm>
           </el-col>

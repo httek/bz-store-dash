@@ -10,7 +10,7 @@ import { Cache } from "../utils/cache";
 import NotFound from "../views/default/NotFound.vue";
 import { Menu } from './../models/menu';
 
-NProgress.configure({ easing: 'ease' });
+NProgress.configure({ easing: 'ease', showSpinner: false });
 
 const defaultRoutes: RouteRecordRaw[] = [
   {

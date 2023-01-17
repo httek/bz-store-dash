@@ -1,13 +1,10 @@
 import { PaginateResponse, Response } from "../bags/response";
-import { Admin } from "../models/admin";
+import { Payment } from "../models/payment";
 import http from "../utils/http";
 
-export namespace AdminAPIs {
-  const prefix = '/v2/admins'
-  export function select(type: number = 1): Promise<Response> {
-    return http.get(`${prefix}/select?type=${type}`)
-  }
-  export function list(page: number = 1, size: number = 10, params?: any): Promise<PaginateResponse> {
+export namespace PaymentAPIs {
+  const prefix = '/v2/payments'
+  export function list(page: number = 1, size: number = 10, params?: { name?: string, status?: number }): Promise<PaginateResponse> {
     return http.get(prefix, { params: { page, size, ...params } })
   }
 
@@ -15,10 +12,10 @@ export namespace AdminAPIs {
     return http.delete(`${prefix}/${id}`)
   }
 
-  export function store(item: Admin): Promise<Response> {
+  export function store(item: Payment): Promise<Response> {
     return http.post(prefix, item)
   }
-  export function update(id: number, item: Admin): Promise<Response> {
+  export function update(id: number, item: Payment): Promise<Response> {
     return http.post(`${prefix}/${id}`, item)
   }
 

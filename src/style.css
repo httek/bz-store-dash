@@ -31,3 +31,7 @@
 .bg-primary {
     background-color: #222d32 !important;
 }
+
+#nprogress .bar {
+    background: red !important;
+}
