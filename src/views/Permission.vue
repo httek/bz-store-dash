@@ -130,7 +130,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item class="w-full" label="权限标识" required prop="slug">
-            <el-input v-model="opForm.slug" clearable placeholder="权限标识" />
+            <el-input :disabled="(opForm.id as number) > 0" v-model="opForm.slug" clearable placeholder="权限标识" />
           </el-form-item>
         </el-col>
 
@@ -217,7 +217,7 @@ const getSelectItems = async () => {
 const statusTypes = ['禁用', '正常']
 const searchFormInit = { name: '', status: -1 }
 const searchForm = reactive({ ...searchFormInit })
-const opFormInit = { id: 0, title: '', icon: '', status: 1, type: 2, path: '', slug: '', sequence: 0, parent_id: undefined, component: '' }
+const opFormInit = { id: 0, title: '', icon: '', status: 1, type: 1, path: '', slug: '', sequence: 0, parent_id: undefined, component: '' }
 const opFormRef = ref<FormInstance>()
 const opForm = reactive<Permission>({ ...opFormInit })
 const opFormRules = reactive({
@@ -225,11 +225,12 @@ const opFormRules = reactive({
 })
 const opFormButtonLoading = ref<boolean>(false)
 const opPanelVisible = ref<boolean>(false)
-const onOp = (row?: Permission) => {
+const onOp = async (row?: Permission) => {
   if (row) {
     Object.assign(opForm, row)
   }
 
+  await getSelectItems()
   opPanelVisible.value = true
 }
 

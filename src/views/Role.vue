@@ -134,8 +134,8 @@
           item.updated_at
         }}</el-descriptions-item>
         <el-descriptions-item width="80px" label-align="right" :span="1" label="角色权限">
-          <el-tree ref="permissionTreeRef" show-checkbox highlight-current :data="permissons" node-key="id"
-            default-expand-all :default-checked-keys="(item.permissionIds as [])">
+          <el-tree check-strictly ref="permissionTreeRef" show-checkbox highlight-current :data="permissons"
+            node-key="id" default-expand-all :default-checked-keys="(item.permissionIds as [])">
             <template #default="{ node, data }">
               <el-row :gutter="20" class="w-full p-2">
                 <el-col :span="24" class="w-full">
@@ -247,7 +247,7 @@ const preciseName = async (rule: any, value: string, callback: any) => {
 
   if (opModel.id == 0 || opModel.id > 0 && value != opModel.name) {
     const pRes = await APIs.precise(value)
-    if (pRes.data) {
+    if (pRes.data.id || 0) {
       return callback(new Error('该角色名称已存在'))
     }
   }

@@ -13,7 +13,7 @@
     </template>
     <template #extra>
       <div class="flex items-center">
-        <el-button type="primary" @click="onOp()" icon="Plus" circle />
+        <el-button v-if="authStore.hasPermission('store.add')" type="primary" @click="onOp()" icon="Plus" circle />
       </div>
     </template>
 
@@ -97,9 +97,11 @@
       <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
       <el-table-column align="center" fixed="right" label="操作" width="120">
         <template #default="scope">
-          <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
-          <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
-            icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
+          <el-button v-if="authStore.hasPermission('store.edit')" link @click="onOp(scope.row)"
+            class="hover:text-blue-500">编辑</el-button>
+          <el-popconfirm v-if="authStore.hasPermission('store.delete')" confirm-button-text="确定"
+            confirm-button-type="danger" cancel-button-text="取消" icon-color="#626AEF" width="200px"
+            @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
             <template #reference>
               <el-button link class="hover:text-red-500">删除</el-button>
             </template>

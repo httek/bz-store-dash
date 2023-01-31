@@ -25,7 +25,7 @@ const router = createRouter({
   history: createWebHistory(), routes: [...defaultRoutes]
 })
 
-const makeMenu = (item: Menu) => {
+export const makeMenu = (item: Menu) => {
   if (item.type == 2) {
     return null
   }
@@ -59,6 +59,7 @@ router.beforeEach(async (to, from) => {
       authStore.profile = session.profile
       authStore.menus = session.menus.map(makeMenu)
       authStore.menus.map(item => addRoute(router, item))
+      authStore.permissions = session.permissions
 
       return to.fullPath
     }

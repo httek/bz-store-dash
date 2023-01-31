@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { ElMessage, ElNotification } from "element-plus";
 import { Response } from "../bags/response";
-import { TokenCacheKey } from "../consts/auth";
+import { TokenCacheKey } from './../consts/auth';
+import { useAuthStore } from './../states/auth.state';
 import { Cache } from "./cache";
 
 const http = axios.create()
@@ -33,7 +34,20 @@ http.interceptors.response.use(async (httpResponse: AxiosResponse) => {
   return response
 }, err => {
   ElNotification.closeAll()
-  ElNotification.error({ title: '服务器异常，请稍后再试!', message: '服务器异常，请稍后再试!' })
+  const authStore = useAuthStore()
+  switch (err.response.status || 0) {
+    case 401:
+      if (authStore.token) {
+        ElMessage.error('请登录后操作')
+        Cache.forget(TokenCacheKey)
+        authStore.$reset()
+        window.location.replace('/auth/login')
+      }
+      break;
+
+    default:
+      ElNotification.error({ title: '服务器异常，请稍后再试!', message: '服务器异常，请稍后再试!' })
+  }
 
   return err
 });

@@ -51,9 +51,9 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="expired_at" width="170" label="证书到期" />
-      <el-table-column align="center" prop="created_at" width="170" label="创建时间" />
-      <el-table-column align="center" prop="created_at" width="170" label="更新时间" />
+      <el-table-column align="center" prop="expired_at" width="175" label="证书到期" />
+      <el-table-column align="center" prop="created_at" width="175" label="创建时间" />
+      <el-table-column align="center" prop="created_at" width="175" label="更新时间" />
       <el-table-column align="center" fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link @click="onOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
@@ -70,7 +70,7 @@
   </div>
 
   <!-- Pagination -->
-  <div class="flex justify-end w-full p-4" v-if="items.length">
+  <div class="flex justify-end w-full p-4" v-if="items && items.length">
     <el-pagination @current-change="(page) => { paginate.page = page; getItems() }" class="justify-end"
       v-model:page-size="paginate.size" @size-change="(size) => getItems()" :page-sizes="[10, 20, 30, 50, 100]"
       background layout="total, sizes, prev, pager, next" :total="paginate.total" />

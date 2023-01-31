@@ -98,7 +98,9 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="角色">
-        <el-tree-select placeholder="账号角色" class="w-full" v-model="opFormModel.role_id" :data="[]" check-strictly />
+        <el-select v-model="opFormModel.role_id" class="w-full" placeholder="选择角色" size="large">
+          <el-option v-for="item in roles" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
       </el-form-item>
       <el-form-item label="名称" required prop="name">
         <el-input v-model="opFormModel.name" clearable placeholder="请输入名称" />
@@ -129,20 +131,25 @@
 </template>
 
 <script setup lang="ts">
-import { ElNotification, FormInstance, UploadUserFile } from "element-plus";
+import { ElMessage, ElNotification, FormInstance, UploadUserFile } from "element-plus";
 import { onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import { AdminAPIs } from "../apis/admin.api";
+import { RoleAPIs } from "../apis/role.api";
 import { Response } from "../bags/response";
 import { HTTP, UploadApi } from "../consts";
 import { Admin } from "../models/admin";
+import { Role } from "../models/role";
 import { useAuthStore } from "../states/auth.state";
 
 onMounted(() => getItems())
 
 const route = useRoute()
-const types = ['快递配送', '商家配送', '其他方式']
 const items = ref<Admin[]>([]);
+const roles = ref<Role[]>([])
+const getRoles = async () => {
+  roles.value = (await RoleAPIs.select()).data
+}
 const paginate = reactive({ page: 1, size: 10, total: 0 })
 const authStore = useAuthStore()
 const loading = ref(false)
@@ -177,7 +184,7 @@ const opVisible = ref<boolean>(false)
 const opFormRef = ref<FormInstance>()
 const opFormButtonLoading = ref(false)
 const opFormModelInit: Admin = {
-  name: '', id: 0, password: '', mobile: '', role_id: 0, avatar: ''
+  name: '', id: 0, password: '', mobile: '', role_id: undefined, avatar: ''
 }
 const opFormModel = reactive({ ...opFormModelInit })
 const opFormRules = reactive({
@@ -189,12 +196,15 @@ const onOp = (row?: Admin) => {
     row.avatar && uploadedFiles.value.push({ name: row.avatar as string, url: row.avatar as string })
   }
 
+  getRoles()
   opVisible.value = true
 }
 const onOpCancel = () => {
   Object.assign(opFormModel, opFormModelInit)
   opVisible.value = false
+  uploadedFiles.value = []
 }
+
 const onOpSubmit = (form: FormInstance | undefined) => {
   if (!form) return
 
@@ -216,7 +226,7 @@ const onOpSubmit = (form: FormInstance | undefined) => {
       return ElNotification.success({ title: res.msg })
     }
 
-    ElNotification.success({ title: '操作成功' })
+    ElMessage.success(res.msg)
     onOpCancel()
     getItems()
   })
@@ -226,7 +236,7 @@ const onDelete = async (id: number) => {
   const res = await AdminAPIs.destroy(id)
   if (res.code == HTTP.OK) {
     getItems()
-    ElNotification.success({ title: '删除成功' })
+    ElMessage.success(res.msg)
   }
 }
 </script>
