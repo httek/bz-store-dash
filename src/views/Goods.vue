@@ -90,7 +90,7 @@
         <template #default="scope">
           <el-popover placement="right">
             <template #reference>
-              <el-avatar shape="square" class="cover" :src="scope.row.covers[0] || null" />
+              <el-avatar shape="square" class="cover" :src="scope.row.covers ? scope.row.covers[0] : null" />
             </template>
             <template #default>
               <el-row :gutter="5" class="flex justify-center content-center">

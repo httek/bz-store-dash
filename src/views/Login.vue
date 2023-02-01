@@ -65,7 +65,7 @@ import { validators } from '../validators';
 const route = useRoute()
 const router = useRouter()
 const ruleFormRef = ref<FormInstance>()
-const loginForm = reactive({ password: '', mobile: '', remember: false })
+const loginForm = reactive({ password: '', mobile: '18101333903', remember: false })
 const loading = ref<boolean>(false)
 
 const rules = reactive<any>({
