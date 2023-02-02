@@ -4,6 +4,8 @@
 
 :root {
     --el-menu-item-height: 52px !important;
+
+    --el-upload-list-picture-card-size: 100px !important
 }
 
 .cover {
@@ -15,8 +17,15 @@
     display: none !important;
 }
 
-.hide-upload-btn .el-upload-list li span .el-upload-list__item-preview {
+/* .hide-upload-btn .el-upload-list li span .el-upload-list__item-preview {
     display: none !important;
+} */
+
+.el-upload--picture-card,
+.el-upload-list--picture-card .el-upload-list__item,
+.el-upload-list--picture-card {
+    height: 100px !important;
+    width: 100px !important;
 }
 
 .hide-back .el-page-header__header .el-page-header__left .el-page-header__back,

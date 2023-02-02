@@ -12,7 +12,7 @@
     </template>
     <template #extra>
       <div class="flex items-center">
-        <el-button type="primary" icon="Refresh" circle />
+        <el-button @click="getList()" type="primary" icon="Refresh" circle />
       </div>
     </template>
   </el-page-header>
@@ -24,7 +24,8 @@
           <el-page-header class="hide-back py-4">
             <template #content>
               <div class="flex items-center">
-                <el-button type="primary" @click="onAdd" icon="Plus" circle />
+                <el-button :disabled="swiperOpFormButtonLoading" type="primary" @click="onSwiperOp()" icon="Plus"
+                  circle />
               </div>
             </template>
           </el-page-header>
@@ -35,14 +36,14 @@
             <el-table-column align="left" fixed="left" width="220" prop="mark" label="位置" />
             <el-table-column align="left" prop="value" label="详情">
               <template #default="scope">
-                <el-link @click="onEditSwiper(scope.row)" type="primary">{{ scope.row.value.length }} 张图片</el-link>
+                <el-link @click="onSwiperOp(scope.row)" type="primary">{{ scope.row.value.length }} 张图片</el-link>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="created_at" min-width="180" label="创建时间" />
             <el-table-column align="center" prop="updated_at" min-width="180" label="更新时间" />
             <el-table-column align="center" fixed="right" label="操作" width="120">
               <template #default="scope">
-                <el-button link @click="onEditSwiper(scope.row)" class="hover:text-blue-500">编辑</el-button>
+                <el-button link @click="onSwiperOp(scope.row)" class="hover:text-blue-500">编辑</el-button>
                 <el-popconfirm confirm-button-text="确定" confirm-button-type="danger" cancel-button-text="取消"
                   icon-color="#626AEF" width="200px" @confirm="onDelete(scope.row.id)" :title="'确定要是删除吗?'">
                   <template #reference>
@@ -58,39 +59,95 @@
   </div>
 
   <!-- Swiper -->
+  <el-dialog width="760px" v-model="swiperPanelVisible"
+    :title="(swiperFormModel.id || 0) > 0 ? `编辑 · ${swiperFormModel.mark || '轮播'}` : '新增'" align-center class="px-2"
+    destroy-on-close @close="onCloseSwiperOpPanel" :close-on-click-modal="false">
+    <el-form inline status-icon :rules="swiperFormRules" ref="swiperFormRef" :model="swiperFormModel" label-width="60px"
+      class="w-full">
+      <!-- {{ currentSwiperRow }} -->
+      <el-row :gutter="6">
+        <el-col :span="24">
+          <el-form-item class="w-full" label="位置" required prop="key">
+            <el-select :disabled="(swiperFormModel.id || 0) > 0" v-model="swiperFormModel.key" class="w-full"
+              placeholder="请选择">
+              <el-option :disabled="activeItems.find(el => el.key == item.id) != null" v-for="item in swiperPositions"
+                :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <template v-if="swiperFormModel.key" v-for="(swiper, index) of swiperFormModel.value">
+        <div class="rounded bg-gray-100 w-full m-1 pt-4">
+          <el-row :gutter="8" class="px-4">
+            <el-col :span="4">
+              <el-form-item class="w-full" :key="swiper.key" :prop="'value.' + index + '.image'" :rules="{
+                required: true,
+                message: '请上传图片',
+                trigger: 'blur',
+              }">
+                <el-upload class="w-full" :class="{ 'hide-upload-btn': swiperFormModel.value[index].image }" :limit="1"
+                  :on-success="onSwiperImageUploaded(index)" :on-remove="() => swiper.image = ''"
+                  accept="image/png,image/jpg,image/jpeg"
+                  :file-list="swiper.image ? [{ name: swiper.image, url: swiper.image }] : []" :action="UploadApi"
+                  :data="{ index }" :headers="{ Authorization: 'Bearer ' + authStore.token }" list-type="picture-card">
+                  <el-icon>
+                    <Plus />
+                  </el-icon>
+                </el-upload>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10" class="flex justify-center content-center items-center">
+              <el-form-item class="w-full" :key="swiper.target" label="关联">
+                <el-select v-model="swiper.target" class="w-full" placeholder="请选择">
+                  <el-option v-for="item in swiperTargetClass" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10" class="flex justify-center content-center items-center">
+              <el-form-item class="w-full" :key="swiper.resource" label="资源">
+                <el-select v-model="swiper.resource" class="w-full" placeholder="请选择">
+                  <el-option v-for="item in swiperTargetClass" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+      </template>
+    </el-form>
 
-  <el-dialog width="685px" v-model="swiperPanelVisible" title="{{ currentRow.mark }}" align-center class="px-5"
-    destroy-on-close :close-on-press-escape="false" :close-on-click-modal="false">
-    {{ Cfg.Groups[active] }}
-
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="onCloseSwiperOpPanel()">取消</el-button>
+        <el-button :loading="swiperOpFormButtonLoading" type="primary" @click="onSwiperOpSubmit(swiperFormRef)">{{
+          swiperFormModel.id ? '保存' : '添加'
+        }}</el-button>
+      </span>
+    </template>
   </el-dialog>
-
-  <!--  -->
+  <!-- Swiper  -->
 </template>
 
-<style>
-
-</style>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
-import { onMounted, ref } from 'vue';
+import { ElMessage, FormInstance } from 'element-plus';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { ConfigAPIs } from '../apis/config.api';
-import { HTTP } from '../consts';
+import { Response } from '../bags/response';
+import { HTTP, UploadApi } from '../consts';
 import { Cfg } from '../consts/config';
 import { Config } from '../models/config';
+import { useAuthStore } from '../states/auth.state';
+
+const authStore = useAuthStore()
 
 const active = ref<number>(0)
 const route = useRoute()
 const items = ref<Config[]>([])
 const activeItems = ref<Config[]>([])
-const currentRow = ref<Config>()
-const swiperPanelVisible = ref<boolean>(false)
 
 onMounted(async () => {
   await getList()
-  loadActiveTabItems()
 })
 
 const loadActiveTabItems = () => {
@@ -100,6 +157,7 @@ const loadActiveTabItems = () => {
 const getList = async (group: number = -1) => {
   const res = await ConfigAPIs.get(group)
   items.value = res.data
+  loadActiveTabItems()
 }
 
 const onChangeTab = (index: any) => {
@@ -107,21 +165,83 @@ const onChangeTab = (index: any) => {
   loadActiveTabItems()
 }
 
-const onAdd = () => {
-  console.log(active.value);
-}
-
-
-// 编辑轮播图
-const onEditSwiper = (item: Config) => {
-  currentRow.value = item
-  swiperPanelVisible.value = true
-}
-
 const onDelete = async (id: number) => {
   const res = await ConfigAPIs.destroy(id)
   await getList()
-  loadActiveTabItems()
   res.code == HTTP.OK && ElMessage.success(res.msg)
 }
+
+
+// Swiper
+const swiperPanelVisible = ref(false)
+const currentSwiperRow = ref<Config>()
+const swiperFormModelInit = {
+  key: undefined, value: [{
+    image: '', target: 0, resource: ''
+  }], id: 0, group: Cfg.Group.Swiper, type: 'array'
+}
+const swiperFormModel = reactive<Config>({ ...swiperFormModelInit })
+const swiperFormRules = reactive({})
+const swiperFormRef = ref<FormInstance>()
+const swiperPositions = [
+  { id: 'swiper.mapp.home', label: '小程序商城主页' },
+  { id: 'swiper.mapp.ucenter', label: '小程序个人首页' },
+]
+const swiperTargetClass = [
+  { id: 0, label: '分类' },
+  { id: 1, label: '商品' },
+]
+const swiperOpFormButtonLoading = ref(false)
+const onSwiperImageUploaded = (index: number) => {
+  return (res: Response) => {
+    console.log(res);
+
+    if (res.code == HTTP.OK)
+      swiperFormModel.value[index].image = res.data
+    else
+      ElMessage.error(res.msg || '图片上传失败')
+  }
+}
+
+const onSwiperOp = (item?: Config) => {
+  if (item) {
+    currentSwiperRow.value = item
+    Object.assign(swiperFormModel, item)
+  }
+
+  swiperPanelVisible.value = true
+}
+
+const onSwiperOpSubmit = async (form: FormInstance | undefined) => {
+  swiperOpFormButtonLoading.value = true
+  let res;
+  if ((swiperFormModel.id || 0) > 0) {
+    res = await ConfigAPIs.update(swiperFormModel.key as string, swiperFormModel)
+  } else {
+    res = await ConfigAPIs.store(swiperFormModel)
+  }
+
+  if (res.code == HTTP.OK) {
+    getList()
+    onCloseSwiperOpPanel()
+    ElMessage.success(res.msg)
+  }
+}
+
+const onResetSwiperForm = () => {
+  Object.assign(
+    swiperFormModel,
+    { ...((swiperFormModel.id || 0) > 0 ? currentSwiperRow.value : swiperFormModelInit) }
+  )
+
+  console.log((swiperFormModel.id || 0) > 0 ? currentSwiperRow.value : swiperFormModelInit);
+
+}
+const onCloseSwiperOpPanel = () => {
+  swiperPanelVisible.value = false
+  Object.assign(swiperFormModel, swiperFormModelInit)
+  swiperOpFormButtonLoading.value = false
+}
+
+// Swiper End
 </script>

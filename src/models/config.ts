@@ -1,7 +1,9 @@
 export interface Config {
-  key: string
-  value?: string
-  group: number
+  id?: number
   type?: string
+  key?: string
+  value?: any
+  group: number
+  mark?: string
   created_at?: string
 }

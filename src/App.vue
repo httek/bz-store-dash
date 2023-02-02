@@ -60,12 +60,12 @@
       </div>
     </el-header>
     <el-container :style="{ height: `calc(100vh - ${Layout.HeaderHeight}px)` }" class="p-0">
-      <el-aside class="aside h-full bg-white" :style="{ width: `${Layout.AsideMinWidth}px` }">
+      <el-aside class="aside h-full bg-white" :style="{ width: `${Layout.AsideMaxWidth}px` }">
         <el-scrollbar>
           <Sidebar class="" :active="MenuActive" :menus="authStore.menus" :is-collapse="LeftCollapsed" />
         </el-scrollbar>
       </el-aside>
-      <el-main class="p-0 overflow-x-hidden border-0 bg-slate-400 bg-opacity-5">
+      <el-main class="p-0 overflow-x-hidden border-0 bg-slate-400 bg-opacity-5 pb-10">
         <RouterView />
       </el-main>
     </el-container>
@@ -109,15 +109,8 @@ const site = import.meta.env.VITE_SITE_NAME
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || true)
+const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || false)
 const MenuActive = computed<string>(() => route.path)
-// const ticker = ref<number>(setInterval(() => {
-//   authStore.token && getAuthSession().then(res => {
-//     authStore.permissions = res.data.permissions
-//     authStore.profile = res.data.profile
-//   })
-// }, 3500))
-// onUnmounted(() => ticker.value && clearInterval(ticker.value))
 
 const onLogout = async () => {
   authStore.$reset()
