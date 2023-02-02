@@ -60,7 +60,7 @@
       </div>
     </el-header>
     <el-container :style="{ height: `calc(100vh - ${Layout.HeaderHeight}px)` }" class="p-0">
-      <el-aside class="aside h-full bg-white" :style="{ width: `${Layout.AsideMaxWidth}px` }">
+      <el-aside class="aside h-full bg-white" :style="{ width: `${Layout.AsideMinWidth}px` }">
         <el-scrollbar>
           <Sidebar class="" :active="MenuActive" :menus="authStore.menus" :is-collapse="LeftCollapsed" />
         </el-scrollbar>
@@ -109,7 +109,7 @@ const site = import.meta.env.VITE_SITE_NAME
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || false)
+const LeftCollapsed = ref<boolean>(Cache.get(Layout.AsideCollapsedStatusCacheKey) || true)
 const MenuActive = computed<string>(() => route.path)
 // const ticker = ref<number>(setInterval(() => {
 //   authStore.token && getAuthSession().then(res => {

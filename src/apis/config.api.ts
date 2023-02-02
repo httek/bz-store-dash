@@ -13,8 +13,8 @@ export namespace ConfigAPIs {
     return http.post(prefix, item)
   }
 
-  export function destroy(key: string): Promise<Response> {
-    return http.delete(`${prefix}/${key}`)
+  export function destroy(id: number): Promise<Response> {
+    return http.delete(`${prefix}/${id}`)
   }
 
   export function update(key: string, item: Config): Promise<Response> {
